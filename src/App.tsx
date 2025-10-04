@@ -1,12 +1,12 @@
-import { FC } from "react"
-import MainPage from "./pages/MainPage"
+import { FC } from 'react';
+import MainPage from './pages/MainPage';
 
 interface AppProps {
-  placesCount: number
+  placesCount: number;
 }
 
 const App: FC<AppProps> = ({ placesCount }) => (
   <MainPage placesCount={placesCount} />
-)
+);
 
-export default App
+export default App;
