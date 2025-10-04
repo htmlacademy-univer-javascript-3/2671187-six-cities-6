@@ -7,7 +7,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
     'htmlacademy/react-typescript',
-    'prettier', // Добавляем prettier в конец для отключения конфликтующих правил
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -16,10 +16,10 @@ module.exports = {
     project: 'tsconfig.json',
   },
   settings: { react: { version: 'detect' } },
-  plugins: ['react-refresh', 'prettier'], // Добавляем prettier плагин
+  plugins: ['react-refresh', 'prettier'],
   rules: {
     'react-refresh/only-export-components': 'warn',
-    'prettier/prettier': 'error', // Ошибки при несоответствии prettier правилам
+    'prettier/prettier': 'error',
   },
   overrides: [
     {
