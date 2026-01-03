@@ -1,60 +1,11 @@
 import { FC } from 'react';
-import CityCard from '../components/city-card';
+import OffersList from '../components/offers-list';
 
 interface MainPageProps {
-  placesCount: number;
+  offers: Offer[];
 }
 
-const MainPage: FC<MainPageProps> = ({ placesCount }) => {
-  const places = [
-    {
-      id: 1,
-      mark: 'Premium',
-      image: '/img/apartment-01.jpg',
-      price: '120',
-      rating: '80',
-      name: 'Beautiful & luxurious apartment at great location',
-      type: 'Apartment',
-      isBookmarked: false,
-    },
-    {
-      id: 2,
-      image: '/img/room.jpg',
-      price: '80',
-      rating: '80',
-      name: 'Wood and stone place',
-      type: 'Room',
-      isBookmarked: true,
-    },
-    {
-      id: 3,
-      image: '/img/apartment-02.jpg',
-      price: '132',
-      rating: '80',
-      name: 'Canal View Prinsengracht',
-      type: 'Apartment',
-      isBookmarked: false,
-    },
-    {
-      id: 4,
-      mark: 'Premium',
-      image: '/img/apartment-03.jpg',
-      price: '180',
-      rating: '100',
-      name: 'Nice, cozy, warm big bed apartment',
-      type: 'Apartment',
-      isBookmarked: false,
-    },
-    {
-      id: 5,
-      image: '/img/room.jpg',
-      price: '80',
-      rating: '80',
-      name: 'Wood and stone place',
-      type: 'Room',
-      isBookmarked: true,
-    },
-  ];
+const MainPage: FC<MainPageProps> = ({ offers }) => {
 
   return (
     <div className='page page--gray page--main'>
@@ -173,7 +124,7 @@ const MainPage: FC<MainPageProps> = ({ placesCount }) => {
             <section className='cities__places places'>
               <h2 className='visually-hidden'>Places</h2>
               <b className='places__found'>
-                {placesCount} places to stay in Amsterdam
+                {offers.length} places to stay in Amsterdam
               </b>
               <form className='places__sorting' action='#' method='get'>
                 <span className='places__sorting-caption'>Sort by</span>
@@ -205,20 +156,7 @@ const MainPage: FC<MainPageProps> = ({ placesCount }) => {
                   </li>
                 </ul>
               </form>
-              <div className='cities__places-list places__list tabs__content'>
-                {places.map(place => (
-                  <CityCard
-                    key={place.id}
-                    mark={place.mark}
-                    image={place.image}
-                    price={place.price}
-                    rating={place.rating}
-                    name={place.name}
-                    type={place.type}
-                    isBookmarked={place.isBookmarked}
-                  />
-                ))}
-              </div>
+              <OffersList offers={offers} />
             </section>
             <div className='cities__right-section'>
               <section className='cities__map map'></section>
