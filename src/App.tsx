@@ -1,23 +1,24 @@
 import { FC } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import MainPage from './pages/MainPage';
-import LoginPage from './pages/LoginPage';
-import FavoritesPage from './pages/FavoritesPage';
-import OfferPage from './pages/OfferPage';
-import NotFoundPage from './pages/NotFoundPage';
-import PrivateRoute from './components/PrivateRoute';
+import MainPage from './pages/main-page';
+import LoginPage from './pages/login-page';
+import FavoritesPage from './pages/favorites-page';
+import OfferPage from './pages/offer-page';
+import NotFoundPage from './pages/not-found-page';
+import PrivateRoute from './components/private-route';
+import { favorites } from './mocks/favorites';
 
 interface AppProps {
-  placesCount: number;
+  offers: Offer[];
 }
 
-const App: FC<AppProps> = ({ placesCount }) => {
+const App: FC<AppProps> = ({ offers }) => {
   const isAuthorized = false;
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<MainPage placesCount={placesCount} />} />
+        <Route path='/' element={<MainPage offers={offers} />} />
         <Route
           path='/login'
           element={isAuthorized ? <Navigate to='/' replace /> : <LoginPage />}
@@ -26,7 +27,7 @@ const App: FC<AppProps> = ({ placesCount }) => {
           path='/favorites'
           element={
             <PrivateRoute isAuthorized={isAuthorized}>
-              <FavoritesPage />
+              <FavoritesPage favorites={favorites} />
             </PrivateRoute>
           }
         />
