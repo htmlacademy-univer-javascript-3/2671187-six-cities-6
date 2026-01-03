@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import CityCard from '../components/CityCard';
+import CityCard from '../components/city-card';
 
 interface MainPageProps {
   placesCount: number;
