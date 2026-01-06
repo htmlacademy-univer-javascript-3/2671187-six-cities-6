@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 
 interface CityCardProps {
   mark?: string;
@@ -8,6 +9,8 @@ interface CityCardProps {
   name: string;
   type: string;
   isBookmarked: boolean;
+  onCardHover?: (offer: Offer | null) => void;
+  offer?: Offer;
 }
 
 const CityCard: FC<CityCardProps> = ({
@@ -18,15 +21,44 @@ const CityCard: FC<CityCardProps> = ({
   name,
   type,
   isBookmarked,
-}) => (
-  <article className='cities__card place-card'>
+  onCardHover,
+  offer,
+}) => {
+  const handleMouseEnter = () => {
+    if (onCardHover && offer) {
+      onCardHover(offer);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (onCardHover) {
+      onCardHover(null);
+    }
+  };
+
+  return (
+    <article
+      className='cities__card place-card'
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
     {mark && (
       <div className='place-card__mark'>
         <span>{mark}</span>
       </div>
     )}
     <div className='cities__image-wrapper place-card__image-wrapper'>
-      <a href='#' aria-label={`View ${name}`}>
+      {offer ? (
+        <Link to={`/offer/${offer.id}`} aria-label={`View ${name}`}>
+          <img
+            className='place-card__image'
+            src={image}
+            width='260'
+            height='200'
+            alt={name}
+          />
+        </Link>
+      ) : (
         <img
           className='place-card__image'
           src={image}
@@ -34,7 +66,7 @@ const CityCard: FC<CityCardProps> = ({
           height='200'
           alt={name}
         />
-      </a>
+      )}
     </div>
     <div className='place-card__info'>
       <div className='place-card__price-wrapper'>
@@ -66,13 +98,18 @@ const CityCard: FC<CityCardProps> = ({
         </div>
       </div>
       <h2 className='place-card__name'>
-        <a href='#' aria-label={`View ${name}`}>
-          {name}
-        </a>
+        {offer ? (
+          <Link to={`/offer/${offer.id}`} aria-label={`View ${name}`}>
+            {name}
+          </Link>
+        ) : (
+          name
+        )}
       </h2>
       <p className='place-card__type'>{type}</p>
     </div>
   </article>
-);
+  );
+};
 
 export default CityCard;
