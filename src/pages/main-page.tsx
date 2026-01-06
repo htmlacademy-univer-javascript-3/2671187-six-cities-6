@@ -1,13 +1,12 @@
 import { FC, useState } from 'react';
 import OffersList from '../components/OffersList/OffersList';
 import Map from '../components/Map';
-import { offers } from '../mocks/offers';
 
 interface MainPageProps {
-  placesCount: number;
+  offers: Offer[];
 }
 
-const MainPage: FC<MainPageProps> = ({ placesCount }) => {
+const MainPage: FC<MainPageProps> = ({ offers }) => {
   const [activeOffer, setActiveOffer] = useState<Offer | null>(null);
 
   // Центр карты - координаты Amsterdam или первого предложения
@@ -133,7 +132,7 @@ const MainPage: FC<MainPageProps> = ({ placesCount }) => {
             <section className='cities__places places'>
               <h2 className='visually-hidden'>Places</h2>
               <b className='places__found'>
-                {placesCount} places to stay in Amsterdam
+                {offers.length} places to stay in Amsterdam
               </b>
               <form className='places__sorting' action='#' method='get'>
                 <span className='places__sorting-caption'>Sort by</span>
