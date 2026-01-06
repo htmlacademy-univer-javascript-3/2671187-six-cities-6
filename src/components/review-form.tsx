@@ -7,7 +7,7 @@ const ReviewForm: FC = () => {
   });
 
   const handleRatingChange = (rating: number) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       rating,
     }));
@@ -16,7 +16,7 @@ const ReviewForm: FC = () => {
   const handleReviewChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       review: event.target.value,
     }));
@@ -59,7 +59,7 @@ const ReviewForm: FC = () => {
         Your review
       </label>
       <div className='reviews__rating-form form__rating'>
-        {[5, 4, 3, 2, 1].map((rating) => (
+        {[5, 4, 3, 2, 1].map(rating => (
           <div key={rating}>
             <input
               className='form__rating-input visually-hidden'
@@ -115,4 +115,3 @@ const ReviewForm: FC = () => {
 };
 
 export default ReviewForm;
-

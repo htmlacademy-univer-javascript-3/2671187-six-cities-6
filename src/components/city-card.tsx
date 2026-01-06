@@ -2,20 +2,37 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
 interface CityCardProps {
-  offer: Offer;
-  setActiveOffer?: (offer: Offer | null) => void;
+  mark?: string;
+  image: string;
+  price: string;
+  rating: string;
+  name: string;
+  type: string;
+  isBookmarked: boolean;
+  onCardHover?: (offer: Offer | null) => void;
+  offer?: Offer;
 }
 
-const CityCard: FC<CityCardProps> = ({ offer, setActiveOffer }) => {
+const CityCard: FC<CityCardProps> = ({
+  mark,
+  image,
+  price,
+  rating,
+  name,
+  type,
+  isBookmarked,
+  onCardHover,
+  offer,
+}) => {
   const handleMouseEnter = () => {
-    if (setActiveOffer) {
-      setActiveOffer(offer);
+    if (onCardHover && offer) {
+      onCardHover(offer);
     }
   };
 
   const handleMouseLeave = () => {
-    if (setActiveOffer) {
-      setActiveOffer(null);
+    if (onCardHover) {
+      onCardHover(null);
     }
   };
 
@@ -25,61 +42,71 @@ const CityCard: FC<CityCardProps> = ({ offer, setActiveOffer }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {offer.isPremium && (
+      {mark && (
         <div className='place-card__mark'>
-          <span>Premium</span>
+          <span>{mark}</span>
         </div>
       )}
       <div className='cities__image-wrapper place-card__image-wrapper'>
-        <Link to={`/offer/${offer.id}`} aria-label={`View ${offer.title}`}>
+        {offer ? (
+          <Link to={`/offer/${offer.id}`} aria-label={`View ${name}`}>
+            <img
+              className='place-card__image'
+              src={image}
+              width='260'
+              height='200'
+              alt={name}
+            />
+          </Link>
+        ) : (
           <img
             className='place-card__image'
-            src={offer.image}
+            src={image}
             width='260'
             height='200'
-            alt={offer.title}
+            alt={name}
           />
-        </Link>
+        )}
       </div>
       <div className='place-card__info'>
         <div className='place-card__price-wrapper'>
           <div className='place-card__price'>
-            <b className='place-card__price-value'>&euro;{offer.price}</b>
+            <b className='place-card__price-value'>&euro;{price}</b>
             <span className='place-card__price-text'>&#47;&nbsp;night</span>
           </div>
           <button
             className={`place-card__bookmark-button button ${
-              offer.isBookmarked
-                ? 'place-card__bookmark-button--active'
-                : ''
+              isBookmarked ? 'place-card__bookmark-button--active' : ''
             }`}
             type='button'
             aria-label={
-              offer.isBookmarked
-                ? 'Remove from bookmarks'
-                : 'Add to bookmarks'
+              isBookmarked ? 'Remove from bookmarks' : 'Add to bookmarks'
             }
           >
             <svg className='place-card__bookmark-icon' width='18' height='19'>
               <use xlinkHref='#icon-bookmark'></use>
             </svg>
             <span className='visually-hidden'>
-              {offer.isBookmarked ? 'In bookmarks' : 'To bookmarks'}
+              {isBookmarked ? 'In bookmarks' : 'To bookmarks'}
             </span>
           </button>
         </div>
         <div className='place-card__rating rating'>
           <div className='place-card__stars rating__stars'>
-            <span style={{ width: `${offer.ratingPercent}%` }}></span>
+            <span style={{ width: `${rating}%` }}></span>
             <span className='visually-hidden'>Rating</span>
           </div>
         </div>
         <h2 className='place-card__name'>
-          <Link to={`/offer/${offer.id}`} aria-label={`View ${offer.title}`}>
-            {offer.title}
-          </Link>
+          {offer ? (
+            <Link to={`/offer/${offer.id}`} aria-label={`View ${name}`}>
+              {name}
+            </Link>
+          ) : (
+            name
+          )}
         </h2>
-        <p className='place-card__type'>{offer.type}</p>
+        <p className='place-card__type'>{type}</p>
       </div>
     </article>
   );

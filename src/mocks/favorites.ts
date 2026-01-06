@@ -30,4 +30,3 @@ export const favorites: FavoriteOffer[] = [
     city: 'Cologne',
   },
 ];
-

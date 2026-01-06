@@ -1,5 +1,5 @@
 type Offer = {
-  id: string;
+  id: string | number;
   title: string;
   type: string;
   price: number;
@@ -7,6 +7,8 @@ type Offer = {
   ratingPercent: number;
   isPremium: boolean;
   isBookmarked: boolean;
+  latitude: number;
+  longitude: number;
 };
 
 type FavoriteOffer = {
@@ -19,4 +21,3 @@ type FavoriteOffer = {
   isPremium: boolean;
   city: string;
 };
-
