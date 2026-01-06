@@ -21,4 +21,3 @@ type FavoriteOffer = {
   isPremium: boolean;
   city: string;
 };
-

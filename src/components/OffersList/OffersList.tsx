@@ -12,8 +12,8 @@ const OffersList: FC<Props> = ({ offers, setActiveOffer }) => {
   };
 
   return (
-    <div className="cities__places-list places__list tabs__content">
-      {offers.map((offer) => (
+    <div className='cities__places-list places__list tabs__content'>
+      {offers.map(offer => (
         <CityCard
           key={offer.id}
           mark={offer.isPremium ? 'Premium' : undefined}
@@ -32,4 +32,3 @@ const OffersList: FC<Props> = ({ offers, setActiveOffer }) => {
 };
 
 export default OffersList;
-

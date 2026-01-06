@@ -54,4 +54,3 @@ const FavoritesCard: FC<FavoritesCardProps> = ({ offer }) => (
 );
 
 export default FavoritesCard;
-

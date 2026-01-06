@@ -168,7 +168,11 @@ const MainPage: FC<MainPageProps> = ({ offers }) => {
             </section>
             <div className='cities__right-section'>
               <section className='cities__map map'>
-                <Map offers={offers} activeOffer={activeOffer} center={mapCenter} />
+                <Map
+                  offers={offers}
+                  activeOffer={activeOffer}
+                  center={mapCenter}
+                />
               </section>
             </div>
           </div>

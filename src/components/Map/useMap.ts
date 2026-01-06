@@ -54,13 +54,13 @@ export const useMap = ({ offers, activeOffer = null, center }: UseMapProps) => {
     }
 
     // Очистка существующих маркеров
-    markersRef.current.forEach((marker) => {
+    markersRef.current.forEach(marker => {
       mapInstanceRef.current?.removeLayer(marker);
     });
     markersRef.current = [];
 
     // Добавление маркеров для всех предложений
-    offers.forEach((offer) => {
+    offers.forEach(offer => {
       if (offer.latitude && offer.longitude) {
         const isActive = activeOffer?.id === offer.id;
         const marker = L.marker([offer.latitude, offer.longitude], {
@@ -91,13 +91,15 @@ export const useMap = ({ offers, activeOffer = null, center }: UseMapProps) => {
   }, [activeOffer, center]);
 
   // Очистка карты при размонтировании компонента
-  useEffect(() => () => {
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.remove();
-      mapInstanceRef.current = null;
-    }
-  }, []);
+  useEffect(
+    () => () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    },
+    []
+  );
 
   return { mapRef, map: mapInstanceRef.current };
 };
-

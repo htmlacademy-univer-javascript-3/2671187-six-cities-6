@@ -6,13 +6,16 @@ interface FavoritesListProps {
 }
 
 const FavoritesList: FC<FavoritesListProps> = ({ favorites }) => {
-  const favoritesByCity = favorites.reduce((acc, offer) => {
-    if (!acc[offer.city]) {
-      acc[offer.city] = [];
-    }
-    acc[offer.city].push(offer);
-    return acc;
-  }, {} as Record<string, FavoriteOffer[]>);
+  const favoritesByCity = favorites.reduce(
+    (acc, offer) => {
+      if (!acc[offer.city]) {
+        acc[offer.city] = [];
+      }
+      acc[offer.city].push(offer);
+      return acc;
+    },
+    {} as Record<string, FavoriteOffer[]>
+  );
 
   return (
     <ul className='favorites__list'>
@@ -26,7 +29,7 @@ const FavoritesList: FC<FavoritesListProps> = ({ favorites }) => {
             </div>
           </div>
           <div className='favorites__places'>
-            {cityFavorites.map((offer) => (
+            {cityFavorites.map(offer => (
               <FavoritesCard key={offer.id} offer={offer} />
             ))}
           </div>
@@ -37,4 +40,3 @@ const FavoritesList: FC<FavoritesListProps> = ({ favorites }) => {
 };
 
 export default FavoritesList;
-
