@@ -1,9 +1,10 @@
-import { changeCity, setOffers } from './reducer';
+import { changeCity, setOffers, changeSorting } from './reducer';
 
 export const actions = {
   changeCity,
   setOffers,
+  changeSorting,
 };
 
-export { changeCity, setOffers };
+export { changeCity, setOffers, changeSorting };
 
