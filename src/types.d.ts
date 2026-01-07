@@ -1,3 +1,14 @@
+type Review = {
+  id: string;
+  user: {
+    name: string;
+    avatar: string;
+  };
+  rating: number;
+  comment: string;
+  date: string;
+};
+
 type Offer = {
   id: string | number;
   title: string;
@@ -9,6 +20,7 @@ type Offer = {
   isBookmarked: boolean;
   latitude: number;
   longitude: number;
+  reviews: Review[];
 };
 
 type FavoriteOffer = {

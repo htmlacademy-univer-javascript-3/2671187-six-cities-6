@@ -1,6 +1,9 @@
 import { Link, useParams } from 'react-router-dom';
 import { offers } from '../mocks/offers';
 import ReviewForm from '../components/review-form';
+import ReviewsList from '../components/ReviewsList';
+import Map from '../components/Map';
+import NearbyOffersList from '../components/NearbyOffersList';
 
 function OfferPage() {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +17,8 @@ function OfferPage() {
       </div>
     );
   }
+
+  const nearbyOffers = offers.filter(o => o.id !== offer.id).slice(0, 3);
 
   return (
     <div className='page'>
@@ -166,44 +171,25 @@ function OfferPage() {
                   </p>
                 </div>
               </div>
-              <section className='offer__reviews reviews'>
-                <h2 className='reviews__title'>
-                  Reviews &middot; <span className='reviews__amount'>12</span>
-                </h2>
-                <ul className='reviews__list'>
-                  <li className='reviews__item'>
-                    <div className='reviews__user user'>
-                      <div className='reviews__avatar-wrapper user__avatar-wrapper'>
-                        <img
-                          className='reviews__avatar user__avatar'
-                          src='/img/avatar-max.jpg'
-                          width='54'
-                          height='54'
-                          alt='Reviews avatar'
-                        />
-                      </div>
-                      <span className='reviews__info'>
-                        <span className='reviews__user-name'>Max</span>
-                        <time className='reviews__time' dateTime='2019-04-24'>
-                          April 2019
-                        </time>
-                      </span>
-                    </div>
-                    <div className='reviews__comment'>
-                      <p className='reviews__text'>
-                        A quiet cozy and picturesque that hides behind a a river
-                        by the unique lightness of Amsterdam. The building is
-                        green and from 18th century.
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-                <ReviewForm />
-              </section>
+              <ReviewsList reviews={offer.reviews} />
+              <ReviewForm />
             </div>
           </div>
-          <section className='offer__map map'></section>
+          <section className='offer__map map'>
+            <Map
+              offers={nearbyOffers}
+              center={[offer.latitude, offer.longitude]}
+            />
+          </section>
         </section>
+        <div className='container'>
+          <section className='near-places places'>
+            <h2 className='near-places__title'>
+              Other places in the neighbourhood
+            </h2>
+            <NearbyOffersList offers={nearbyOffers} />
+          </section>
+        </div>
       </main>
     </div>
   );
