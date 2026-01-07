@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { offers } from '../mocks/offers';
 import ReviewForm from '../components/review-form';
 import ReviewsList from '../components/reviews-list';
-import Map from '../components/Map';
+import Map from '../components/map';
 import NearbyOffersList from '../components/nearby-offers-list';
 
 function OfferPage() {

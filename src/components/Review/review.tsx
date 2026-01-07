@@ -4,7 +4,7 @@ type ReviewProps = {
   review: Review;
 };
 
-const Review: FC<ReviewProps> = ({ review }) => {
+export const Review: FC<ReviewProps> = ({ review }) => {
   const { user, rating, comment, date } = review;
   const ratingPercent = (rating / 5) * 100;
 
@@ -41,4 +41,4 @@ const Review: FC<ReviewProps> = ({ review }) => {
   );
 };
 
-export default Review;
+

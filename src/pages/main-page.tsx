@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import CitiesList from '../components/cities-list';
 import OffersList from '../components/offers-list';
-import Map from '../components/Map';
+import Map from '../components/map';
 import { useAppSelector } from '../store';
 
 const CITIES: City[] = [
