@@ -1,8 +1,10 @@
+import { FC } from 'react';
+
 type ReviewProps = {
   review: Review;
 };
 
-function Review({ review }: ReviewProps): JSX.Element {
+export const Review: FC<ReviewProps> = ({ review }) => {
   const { user, rating, comment, date } = review;
   const ratingPercent = (rating / 5) * 100;
 
@@ -37,6 +39,6 @@ function Review({ review }: ReviewProps): JSX.Element {
       </div>
     </li>
   );
-}
+};
 
-export default Review;
+

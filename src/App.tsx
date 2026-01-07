@@ -8,17 +8,13 @@ import NotFoundPage from './pages/not-found-page';
 import PrivateRoute from './components/private-route';
 import { favorites } from './mocks/favorites';
 
-interface AppProps {
-  offers: Offer[];
-}
-
-const App: FC<AppProps> = ({ offers }) => {
+const App: FC = () => {
   const isAuthorized = false;
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<MainPage offers={offers} />} />
+        <Route path='/' element={<MainPage />} />
         <Route
           path='/login'
           element={isAuthorized ? <Navigate to='/' replace /> : <LoginPage />}

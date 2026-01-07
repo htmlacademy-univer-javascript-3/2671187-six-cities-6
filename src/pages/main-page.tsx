@@ -1,15 +1,27 @@
 import { FC, useState } from 'react';
-import OffersList from '../components/OffersList/OffersList';
-import Map from '../components/Map';
+import CitiesList from '../components/cities-list';
+import OffersList from '../components/offers-list';
+import Map from '../components/map';
+import { useAppSelector } from '../store';
 
-interface MainPageProps {
-  offers: Offer[];
-}
+const CITIES: City[] = [
+  'Paris',
+  'Cologne',
+  'Brussels',
+  'Amsterdam',
+  'Hamburg',
+  'Dusseldorf',
+];
 
-const MainPage: FC<MainPageProps> = ({ offers }) => {
+const MainPage: FC = () => {
   const [activeOffer, setActiveOffer] = useState<Offer | null>(null);
+  const city = useAppSelector(state => state.city);
+  const allOffers = useAppSelector(state => state.offers);
 
-  // Центр карты - координаты Amsterdam или первого предложения
+  // Фильтруем предложения по выбранному городу
+  const offers = allOffers.filter(offer => offer.city === city);
+
+  // Центр карты - координаты первого предложения в выбранном городе или дефолтные
   const mapCenter: [number, number] =
     offers.length > 0
       ? [offers[0].latitude, offers[0].longitude]
@@ -62,77 +74,14 @@ const MainPage: FC<MainPageProps> = ({ offers }) => {
       <main className='page__main page__main--index'>
         <h1 className='visually-hidden'>Cities</h1>
         <div className='tabs'>
-          <section className='locations container'>
-            <ul className='locations__list tabs__list'>
-              <li className='locations__item'>
-                <a
-                  className='locations__item-link tabs__item'
-                  href='#'
-                  tabIndex={0}
-                  aria-label='Select Paris'
-                >
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className='locations__item'>
-                <a
-                  className='locations__item-link tabs__item'
-                  href='#'
-                  tabIndex={0}
-                  aria-label='Select Cologne'
-                >
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className='locations__item'>
-                <a
-                  className='locations__item-link tabs__item'
-                  href='#'
-                  tabIndex={0}
-                  aria-label='Select Brussels'
-                >
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className='locations__item'>
-                <a
-                  className='locations__item-link tabs__item tabs__item--active'
-                  href='#'
-                  tabIndex={0}
-                  aria-label='Select Amsterdam'
-                >
-                  <span>Amsterdam</span>
-                </a>
-              </li>
-              <li className='locations__item'>
-                <a
-                  className='locations__item-link tabs__item'
-                  href='#'
-                  tabIndex={0}
-                  aria-label='Select Hamburg'
-                >
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className='locations__item'>
-                <a
-                  className='locations__item-link tabs__item'
-                  href='#'
-                  tabIndex={0}
-                  aria-label='Select Dusseldorf'
-                >
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
-            </ul>
-          </section>
+          <CitiesList cities={CITIES} currentCity={city} />
         </div>
         <div className='cities'>
           <div className='cities__places-container container'>
             <section className='cities__places places'>
               <h2 className='visually-hidden'>Places</h2>
               <b className='places__found'>
-                {offers.length} places to stay in Amsterdam
+                {offers.length} places to stay in {city}
               </b>
               <form className='places__sorting' action='#' method='get'>
                 <span className='places__sorting-caption'>Sort by</span>

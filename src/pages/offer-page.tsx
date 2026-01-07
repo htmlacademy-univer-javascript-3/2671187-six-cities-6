@@ -1,9 +1,9 @@
 import { Link, useParams } from 'react-router-dom';
 import { offers } from '../mocks/offers';
 import ReviewForm from '../components/review-form';
-import ReviewsList from '../components/ReviewsList';
-import Map from '../components/Map';
-import NearbyOffersList from '../components/NearbyOffersList';
+import ReviewsList from '../components/reviews-list';
+import Map from '../components/map';
+import NearbyOffersList from '../components/nearby-offers-list';
 
 function OfferPage() {
   const { id } = useParams<{ id: string }>();
