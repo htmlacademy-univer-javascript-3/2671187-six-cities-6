@@ -2,7 +2,9 @@ import { FC, useState } from 'react';
 import CitiesList from '../components/cities-list';
 import OffersList from '../components/offers-list';
 import Map from '../components/map';
+import SortingOptions from '../components/SortingOptions';
 import { useAppSelector } from '../store';
+import { sortOffers } from '../components/SortingOptions/utils';
 
 const CITIES: City[] = [
   'Paris',
@@ -17,9 +19,13 @@ const MainPage: FC = () => {
   const [activeOffer, setActiveOffer] = useState<Offer | null>(null);
   const city = useAppSelector(state => state.city);
   const allOffers = useAppSelector(state => state.offers);
+  const sorting = useAppSelector(state => state.sorting);
 
   // Фильтруем предложения по выбранному городу
-  const offers = allOffers.filter(offer => offer.city === city);
+  const cityOffers = allOffers.filter(offer => offer.city === city);
+
+  // Применяем сортировку
+  const offers = sortOffers(cityOffers, sorting);
 
   // Центр карты - координаты первого предложения в выбранном городе или дефолтные
   const mapCenter: [number, number] =
@@ -83,36 +89,7 @@ const MainPage: FC = () => {
               <b className='places__found'>
                 {offers.length} places to stay in {city}
               </b>
-              <form className='places__sorting' action='#' method='get'>
-                <span className='places__sorting-caption'>Sort by</span>
-                <span
-                  className='places__sorting-type'
-                  tabIndex={0}
-                  aria-label='Sort options'
-                >
-                  Popular
-                  <svg className='places__sorting-arrow' width='7' height='4'>
-                    <use xlinkHref='#icon-arrow-select'></use>
-                  </svg>
-                </span>
-                <ul className='places__options places__options--custom places__options--opened'>
-                  <li
-                    className='places__option places__option--active'
-                    tabIndex={0}
-                  >
-                    Popular
-                  </li>
-                  <li className='places__option' tabIndex={0}>
-                    Price: low to high
-                  </li>
-                  <li className='places__option' tabIndex={0}>
-                    Price: high to low
-                  </li>
-                  <li className='places__option' tabIndex={0}>
-                    Top rated first
-                  </li>
-                </ul>
-              </form>
+              <SortingOptions />
               <OffersList offers={offers} setActiveOffer={setActiveOffer} />
             </section>
             <div className='cities__right-section'>

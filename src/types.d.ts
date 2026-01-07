@@ -36,3 +36,9 @@ type FavoriteOffer = {
   isPremium: boolean;
   city: string;
 };
+
+type SortingType =
+  | 'popular'
+  | 'price-low-to-high'
+  | 'price-high-to-low'
+  | 'top-rated-first';
