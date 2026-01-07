@@ -9,6 +9,8 @@ type Review = {
   date: string;
 };
 
+type City = string;
+
 type Offer = {
   id: string | number;
   title: string;
@@ -18,6 +20,7 @@ type Offer = {
   ratingPercent: number;
   isPremium: boolean;
   isBookmarked: boolean;
+  city: City;
   latitude: number;
   longitude: number;
   reviews: Review[];
