@@ -1,16 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { offers } from '../mocks/offers';
+import { fetchOffers } from './api-actions';
 
 interface AppState {
-  city: City;
+  cityTab: City;
   offers: Offer[];
   sorting: SortingType;
+  isLoading: boolean;
+  error: string | null;
 }
 
 const initialState: AppState = {
-  city: 'Paris',
-  offers,
+  cityTab: 'Paris',
+  offers: [],
   sorting: 'popular',
+  isLoading: false,
+  error: null,
 };
 
 const appSlice = createSlice({
@@ -18,7 +22,7 @@ const appSlice = createSlice({
   initialState,
   reducers: {
     changeCity: (state, action: PayloadAction<City>) => {
-      state.city = action.payload;
+      state.cityTab = action.payload;
     },
     setOffers: (state, action: PayloadAction<Offer[]>) => {
       state.offers = action.payload;
@@ -26,6 +30,20 @@ const appSlice = createSlice({
     changeSorting: (state, action: PayloadAction<SortingType>) => {
       state.sorting = action.payload;
     },
+  },
+  extraReducers: builder => {
+    builder
+      .addCase(fetchOffers.pending, state => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchOffers.fulfilled, state => {
+        state.isLoading = false;
+      })
+      .addCase(fetchOffers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Failed to load offers';
+      });
   },
 });
 

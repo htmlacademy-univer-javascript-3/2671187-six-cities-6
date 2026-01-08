@@ -6,7 +6,6 @@ import FavoritesPage from './pages/favorites-page';
 import OfferPage from './pages/offer-page';
 import NotFoundPage from './pages/not-found-page';
 import PrivateRoute from './components/private-route';
-import { favorites } from './mocks/favorites';
 
 const App: FC = () => {
   const isAuthorized = false;
@@ -23,7 +22,7 @@ const App: FC = () => {
           path='/favorites'
           element={
             <PrivateRoute isAuthorized={isAuthorized}>
-              <FavoritesPage favorites={favorites} />
+              <FavoritesPage favorites={[]} />
             </PrivateRoute>
           }
         />
