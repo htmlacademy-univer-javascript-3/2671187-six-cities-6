@@ -8,13 +8,14 @@ type NearbyOfferCardProps = {
 function NearbyOfferCard({ offer }: NearbyOfferCardProps): JSX.Element {
   const {
     isPremium = false,
-    isBookmarked = false,
-    image,
+    isFavorite: isBookmarked = false,
+    previewImage: image,
     price,
-    ratingPercent,
+    rating,
     title,
     type,
   } = offer;
+  const ratingPercent = rating * 20;
   const bookmarkButtonClassName = classNames(
     'place-card__bookmark-button',
     'button',

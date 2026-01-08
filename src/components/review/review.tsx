@@ -40,5 +40,3 @@ export const Review: FC<ReviewProps> = ({ review }) => {
     </li>
   );
 };
-
-

@@ -17,10 +17,9 @@ export const sortOffers = (
     case 'price-high-to-low':
       return offersCopy.sort((a, b) => b.price - a.price);
     case 'top-rated-first':
-      return offersCopy.sort((a, b) => b.ratingPercent - a.ratingPercent);
+      return offersCopy.sort((a, b) => b.rating - a.rating);
     case 'popular':
     default:
       return offersCopy;
   }
 };
-

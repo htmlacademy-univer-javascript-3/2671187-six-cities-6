@@ -5,7 +5,7 @@ import { SORTING_LABELS } from './utils';
 
 function SortingOptions(): JSX.Element {
   const dispatch = useAppDispatch();
-  const currentSorting = useAppSelector((state) => state.sorting);
+  const currentSorting = useAppSelector(state => state.sorting);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSortingChange = (sortingType: SortingType) => {
@@ -31,13 +31,13 @@ function SortingOptions(): JSX.Element {
   ];
 
   return (
-    <form className="places__sorting" action="#" method="get">
-      <span className="places__sorting-caption">Sort by </span>
+    <form className='places__sorting' action='#' method='get'>
+      <span className='places__sorting-caption'>Sort by </span>
       <span
-        className="places__sorting-type"
+        className='places__sorting-type'
         tabIndex={0}
         onClick={() => setIsOpen(!isOpen)}
-        onKeyDown={(event) => {
+        onKeyDown={event => {
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
             setIsOpen(!isOpen);
@@ -45,8 +45,8 @@ function SortingOptions(): JSX.Element {
         }}
       >
         {SORTING_LABELS[currentSorting]}
-        <svg className="places__sorting-arrow" width="7" height="4">
-          <use xlinkHref="#icon-arrow-select"></use>
+        <svg className='places__sorting-arrow' width='7' height='4'>
+          <use xlinkHref='#icon-arrow-select'></use>
         </svg>
       </span>
       <ul
@@ -54,7 +54,7 @@ function SortingOptions(): JSX.Element {
           isOpen ? 'places__options--opened' : ''
         }`}
       >
-        {sortingOptions.map((sortingType) => (
+        {sortingOptions.map(sortingType => (
           <li
             key={sortingType}
             className={`places__option ${
@@ -62,7 +62,7 @@ function SortingOptions(): JSX.Element {
             }`}
             tabIndex={0}
             onClick={() => handleSortingChange(sortingType)}
-            onKeyDown={(event) => handleKeyDown(event, sortingType)}
+            onKeyDown={event => handleKeyDown(event, sortingType)}
           >
             {SORTING_LABELS[sortingType]}
           </li>
@@ -73,4 +73,3 @@ function SortingOptions(): JSX.Element {
 }
 
 export default SortingOptions;
-

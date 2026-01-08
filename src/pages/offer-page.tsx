@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { offers } from '../mocks/offers';
+import { useAppSelector } from '../store';
 import ReviewForm from '../components/review-form';
 import ReviewsList from '../components/reviews-list';
 import Map from '../components/map';
@@ -7,7 +7,8 @@ import NearbyOffersList from '../components/nearby-offers-list';
 
 function OfferPage() {
   const { id } = useParams<{ id: string }>();
-  const offer = offers.find(o => o.id === Number(id));
+  const offers = useAppSelector(state => state.offers);
+  const offer = offers.find(o => o.id === id);
 
   if (!offer) {
     return (
@@ -68,21 +69,21 @@ function OfferPage() {
               <div className='offer__image-wrapper'>
                 <img
                   className='offer__image'
-                  src={offer.image}
+                  src={offer.previewImage}
                   alt={offer.title}
                 />
               </div>
               <div className='offer__image-wrapper'>
                 <img
                   className='offer__image'
-                  src={offer.image}
+                  src={offer.previewImage}
                   alt={offer.title}
                 />
               </div>
               <div className='offer__image-wrapper'>
                 <img
                   className='offer__image'
-                  src={offer.image}
+                  src={offer.previewImage}
                   alt={offer.title}
                 />
               </div>
@@ -106,11 +107,11 @@ function OfferPage() {
               </div>
               <div className='offer__rating rating'>
                 <div className='offer__stars rating__stars'>
-                  <span style={{ width: `${offer.ratingPercent}%` }}></span>
+                  <span style={{ width: `${offer.rating * 20}%` }}></span>
                   <span className='visually-hidden'>Rating</span>
                 </div>
                 <span className='offer__rating-value rating__value'>
-                  {(offer.ratingPercent / 20).toFixed(1)}
+                  {offer.rating.toFixed(1)}
                 </span>
               </div>
               <ul className='offer__features'>
@@ -178,7 +179,7 @@ function OfferPage() {
           <section className='offer__map map'>
             <Map
               offers={nearbyOffers}
-              center={[offer.latitude, offer.longitude]}
+              center={[offer.location.latitude, offer.location.longitude]}
             />
           </section>
         </section>

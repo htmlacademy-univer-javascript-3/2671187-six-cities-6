@@ -17,12 +17,12 @@ const OffersList: FC<Props> = ({ offers, setActiveOffer }) => {
         <CityCard
           key={offer.id}
           mark={offer.isPremium ? 'Premium' : undefined}
-          image={offer.image || ''}
+          image={offer.previewImage || ''}
           price={offer.price.toString()}
-          rating={offer.ratingPercent.toString()}
+          rating={(offer.rating * 20).toString()}
           name={offer.title}
           type={offer.type || ''}
-          isBookmarked={offer.isBookmarked}
+          isBookmarked={offer.isFavorite}
           onCardHover={handleCardHover}
           offer={offer}
         />
