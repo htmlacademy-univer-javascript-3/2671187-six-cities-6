@@ -16,11 +16,4 @@ export const actions = {
   logout,
 };
 
-export {
-  changeCity,
-  setOffers,
-  changeSorting,
-  setAuthStatus,
-  setUser,
-  logout,
-};
+export { changeCity, setOffers, changeSorting, setAuthStatus, setUser, logout };

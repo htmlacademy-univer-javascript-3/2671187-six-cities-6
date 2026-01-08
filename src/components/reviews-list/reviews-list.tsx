@@ -1,10 +1,16 @@
 import { Review } from '../review';
+import ReviewForm from '../review-form';
+import { useAppSelector } from '../../store';
 
 type ReviewsListProps = {
   reviews: Review[];
 };
 
 function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
+  const { authorizationStatus } = useAppSelector(state => ({
+    authorizationStatus: state.authorizationStatus,
+  }));
+
   return (
     <section className='offer__reviews reviews'>
       <h2 className='reviews__title'>
@@ -16,6 +22,7 @@ function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
           <Review key={review.id} review={review} />
         ))}
       </ul>
+      {authorizationStatus === 'AUTH' && <ReviewForm />}
     </section>
   );
 }

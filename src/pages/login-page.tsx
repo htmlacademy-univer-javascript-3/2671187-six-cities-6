@@ -64,12 +64,28 @@ const LoginPage: FC = () => {
       .then(() => {
         navigate('/', { replace: true });
       })
-      .catch((err) => {
-        if (err.response?.status === 400) {
-          setError(
-            err.response?.data?.message ||
-              'Invalid email or password. Please check your credentials.'
-          );
+      .catch((err: unknown) => {
+        if (
+          typeof err === 'object' &&
+          err !== null &&
+          'response' in err &&
+          typeof (
+            err as {
+              response?: { status?: number; data?: { message?: string } };
+            }
+          ).response === 'object'
+        ) {
+          const axiosError = err as {
+            response: { status?: number; data?: { message?: string } };
+          };
+          if (axiosError.response?.status === 400) {
+            setError(
+              axiosError.response?.data?.message ||
+                'Invalid email or password. Please check your credentials.'
+            );
+          } else {
+            setError('Failed to sign in. Please try again.');
+          }
         } else {
           setError('Failed to sign in. Please try again.');
         }
@@ -81,7 +97,7 @@ const LoginPage: FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
@@ -181,7 +197,7 @@ const LoginPage: FC = () => {
               <a
                 className='locations__item-link'
                 href='#'
-                onClick={(e) => {
+                onClick={e => {
                   e.preventDefault();
                   handleRandomCityClick();
                 }}

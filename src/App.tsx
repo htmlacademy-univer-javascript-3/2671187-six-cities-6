@@ -45,8 +45,6 @@ const AppContent: FC = () => {
   );
 };
 
-const App: FC = () => {
-  return <AppContent />;
-};
+const App: FC = () => <AppContent />;
 
 export default App;

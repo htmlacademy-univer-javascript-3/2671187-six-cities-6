@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { getWidthByRatingPercent } from '../../utils';
 
 type ReviewProps = {
   review: Review;
@@ -6,7 +7,6 @@ type ReviewProps = {
 
 export const Review: FC<ReviewProps> = ({ review }) => {
   const { user, rating, comment, date } = review;
-  const ratingPercent = (rating / 5) * 100;
 
   return (
     <li className='reviews__item'>
@@ -14,7 +14,7 @@ export const Review: FC<ReviewProps> = ({ review }) => {
         <div className='reviews__avatar-wrapper user__avatar-wrapper'>
           <img
             className='reviews__avatar user__avatar'
-            src={user.avatar}
+            src={String(user.avatarUrl)}
             width='54'
             height='54'
             alt='Reviews avatar'
@@ -25,7 +25,9 @@ export const Review: FC<ReviewProps> = ({ review }) => {
       <div className='reviews__info'>
         <div className='reviews__rating rating'>
           <div className='reviews__stars rating__stars'>
-            <span style={{ width: `${ratingPercent}%` }}></span>
+            <span
+              style={{ width: `${getWidthByRatingPercent(rating)}%` }}
+            ></span>
             <span className='visually-hidden'>Rating</span>
           </div>
         </div>

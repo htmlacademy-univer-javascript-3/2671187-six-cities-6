@@ -50,3 +50,60 @@ export const login = createAsyncThunk<
   dispatch(setAuthStatus('AUTH'));
   return data;
 });
+
+type CommentData = {
+  comment: string;
+  rating: number;
+};
+
+export const fetchOfferDetails = createAsyncThunk<
+  OfferDetails,
+  string,
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+    extra: AxiosInstance;
+  }
+>('offer/fetchDetails', async (offerId, { extra: api }) => {
+  const { data } = await api.get<OfferDetails>(`/offers/${offerId}`);
+  return data;
+});
+
+export const fetchNearbyOffers = createAsyncThunk<
+  Offer[],
+  string,
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+    extra: AxiosInstance;
+  }
+>('offer/fetchNearby', async (offerId, { extra: api }) => {
+  const { data } = await api.get<Offer[]>(`/offers/${offerId}/nearby`);
+  return data;
+});
+
+export const fetchComments = createAsyncThunk<
+  Review[],
+  string,
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+    extra: AxiosInstance;
+  }
+>('offer/fetchComments', async (offerId, { extra: api }) => {
+  const { data } = await api.get<Review[]>(`/comments/${offerId}`);
+  return data;
+});
+
+export const submitComment = createAsyncThunk<
+  Review,
+  { offerId: string; commentData: CommentData },
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+    extra: AxiosInstance;
+  }
+>('offer/submitComment', async ({ offerId, commentData }, { extra: api }) => {
+  const { data } = await api.post<Review>(`/comments/${offerId}`, commentData);
+  return data;
+});
