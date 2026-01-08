@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import CitiesList from '../components/cities-list';
 import OffersList from '../components/offers-list';
 import Map from '../components/map';
@@ -6,6 +7,7 @@ import SortingOptions from '../components/SortingOptions';
 import Spinner from '../components/spinner';
 import { useAppSelector, useAppDispatch } from '../store';
 import { fetchOffers } from '../store/api-actions';
+import { logout } from '../store/action';
 import { sortOffers } from '../components/SortingOptions/utils';
 
 const CITIES: City[] = [
@@ -34,6 +36,18 @@ const MainPage: FC = () => {
   const sorting = useAppSelector(state => state.sorting);
   const isLoading = useAppSelector(state => state.isLoading);
   const error = useAppSelector(state => state.error);
+  const authorizationStatus = useAppSelector(
+    state => state.authorizationStatus
+  );
+  const user = useAppSelector(state => state.user);
+
+  const isAuthorized = authorizationStatus === 'AUTH';
+  const userEmail = user?.email || '';
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    dispatch(logout());
+  };
 
   useEffect(() => {
     dispatch(fetchOffers());
@@ -55,9 +69,9 @@ const MainPage: FC = () => {
         <div className='container'>
           <div className='header__wrapper'>
             <div className='header__left'>
-              <a
+              <Link
                 className='header__logo-link header__logo-link--active'
-                href='/'
+                to='/'
               >
                 <img
                   className='header__logo'
@@ -66,29 +80,47 @@ const MainPage: FC = () => {
                   width='81'
                   height='41'
                 />
-              </a>
+              </Link>
             </div>
-            <nav className='header__nav'>
-              <ul className='header__nav-list'>
-                <li className='header__nav-item user'>
-                  <a
-                    className='header__nav-link header__nav-link--profile'
-                    href='/profile'
-                  >
-                    <div className='header__avatar-wrapper user__avatar-wrapper'></div>
-                    <span className='header__user-name user__name'>
-                      Oliver.conner@gmail.com
-                    </span>
-                    <span className='header__favorite-count'>3</span>
-                  </a>
-                </li>
-                <li className='header__nav-item'>
-                  <a className='header__nav-link' href='/logout'>
-                    <span className='header__signout'>Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
+            {isAuthorized ? (
+              <nav className='header__nav'>
+                <ul className='header__nav-list'>
+                  <li className='header__nav-item user'>
+                    <Link
+                      className='header__nav-link header__nav-link--profile'
+                      to='/favorites'
+                    >
+                      <div className='header__avatar-wrapper user__avatar-wrapper'></div>
+                      <span className='header__user-name user__name'>
+                        {userEmail}
+                      </span>
+                    </Link>
+                  </li>
+                  <li className='header__nav-item'>
+                    <a
+                      className='header__nav-link'
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleLogout();
+                      }}
+                    >
+                      <span className='header__signout'>Sign out</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            ) : (
+              <nav className='header__nav'>
+                <ul className='header__nav-list'>
+                  <li className='header__nav-item'>
+                    <Link className='header__nav-link' to='/login'>
+                      <span className='header__login'>Sign in</span>
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
+            )}
           </div>
         </div>
       </header>

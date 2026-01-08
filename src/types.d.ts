@@ -52,3 +52,14 @@ type SortingType =
   | 'price-low-to-high'
   | 'price-high-to-low'
   | 'top-rated-first';
+
+type AuthorizationStatus = 'AUTH' | 'NO_AUTH' | 'UNKNOWN';
+
+type AuthInfo = {
+  avatarUrl: string;
+  email: string;
+  id: number;
+  isPro: boolean;
+  name: string;
+  token: string;
+};
