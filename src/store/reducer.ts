@@ -7,6 +7,8 @@ interface AppState {
   sorting: SortingType;
   isLoading: boolean;
   error: string | null;
+  authorizationStatus: AuthorizationStatus;
+  user: AuthInfo | null;
 }
 
 const initialState: AppState = {
@@ -15,6 +17,8 @@ const initialState: AppState = {
   sorting: 'popular',
   isLoading: false,
   error: null,
+  authorizationStatus: 'UNKNOWN',
+  user: null,
 };
 
 const appSlice = createSlice({
@@ -29,6 +33,16 @@ const appSlice = createSlice({
     },
     changeSorting: (state, action: PayloadAction<SortingType>) => {
       state.sorting = action.payload;
+    },
+    setAuthStatus: (state, action: PayloadAction<AuthorizationStatus>) => {
+      state.authorizationStatus = action.payload;
+    },
+    setUser: (state, action: PayloadAction<AuthInfo | null>) => {
+      state.user = action.payload;
+    },
+    logout: (state) => {
+      state.authorizationStatus = 'NO_AUTH';
+      state.user = null;
     },
   },
   extraReducers: builder => {
@@ -47,5 +61,12 @@ const appSlice = createSlice({
   },
 });
 
-export const { changeCity, setOffers, changeSorting } = appSlice.actions;
+export const {
+  changeCity,
+  setOffers,
+  changeSorting,
+  setAuthStatus,
+  setUser,
+  logout,
+} = appSlice.actions;
 export const reducer = appSlice.reducer;
