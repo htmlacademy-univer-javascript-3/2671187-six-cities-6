@@ -1,6 +1,15 @@
 import { FC, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../store';
+import { submitComment } from '../store/api-actions';
 
 const ReviewForm: FC = () => {
+  const dispatch = useAppDispatch();
+
+  const { currentOffer, isCommentSubmitting } = useAppSelector(state => ({
+    currentOffer: state.currentOffer,
+    isCommentSubmitting: state.isCommentSubmitting,
+  }));
+
   const [formData, setFormData] = useState({
     rating: 0,
     review: '',
@@ -25,13 +34,30 @@ const ReviewForm: FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Сброс формы после отправки
-    setFormData({
-      rating: 0,
-      review: '',
-    });
+    if (!currentOffer) {
+      return;
+    }
 
-    // Здесь будет логика отправки формы на сервер
+    dispatch(
+      submitComment({
+        offerId: currentOffer.id,
+        commentData: {
+          comment: formData.review,
+          rating: formData.rating,
+        },
+      })
+    )
+      .unwrap()
+      .then(() => {
+        // Сброс формы после отправки
+        setFormData({
+          rating: 0,
+          review: '',
+        });
+      })
+      .catch(() => {
+        // Обработка ошибки - можно добавить уведомление пользователю
+      });
   };
 
   const getRatingTitle = (rating: number): string => {
@@ -105,9 +131,9 @@ const ReviewForm: FC = () => {
         <button
           className='reviews__submit form__submit button'
           type='submit'
-          disabled={!isFormValid}
+          disabled={!isFormValid || isCommentSubmitting}
         >
-          Submit
+          {isCommentSubmitting ? 'Submitting...' : 'Submit'}
         </button>
       </div>
     </form>

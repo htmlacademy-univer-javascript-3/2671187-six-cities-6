@@ -100,7 +100,7 @@ const MainPage: FC = () => {
                     <a
                       className='header__nav-link'
                       href='#'
-                      onClick={(e) => {
+                      onClick={e => {
                         e.preventDefault();
                         handleLogout();
                       }}
