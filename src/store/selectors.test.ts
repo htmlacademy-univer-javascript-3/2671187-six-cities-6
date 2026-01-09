@@ -104,4 +104,3 @@ describe('Selectors', () => {
     expect(mainPageData.cityTab).toBe('Paris');
   });
 });
-

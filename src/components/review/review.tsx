@@ -1,4 +1,5 @@
 import { FC, memo, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { getWidthByRatingPercent } from '../../utils/formatters';
 
 type ReviewProps = {
@@ -52,3 +53,16 @@ export const Review: FC<ReviewProps> = memo(({ review }) => {
 
 Review.displayName = 'Review';
 
+Review.propTypes = {
+  review: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    user: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      avatarUrl: PropTypes.string.isRequired,
+      isPro: PropTypes.bool.isRequired,
+    }).isRequired,
+    rating: PropTypes.number.isRequired,
+    comment: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+  }).isRequired,
+};

@@ -48,7 +48,7 @@ export const login = createAsyncThunk<
   }
 >('user/login', async ({ email, password }, { dispatch, extra: api }) => {
   const { data } = await api.post<AuthInfo>('/login', { email, password });
-  localStorage.setItem(LOCAL_STORAGE_TOKEN, data.token);
+  localStorage.setItem(LOCAL_STORAGE_TOKEN, String(data.token));
   dispatch(setUser(data));
   dispatch(setAuthStatus('AUTH'));
   return data;

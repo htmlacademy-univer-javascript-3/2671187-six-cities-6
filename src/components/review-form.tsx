@@ -16,7 +16,8 @@ const ratingLabelsMap: Record<number, string> = {
   1: 'terribly',
 };
 
-const getRatingTitle = (rating: number): string => ratingLabelsMap[rating] ?? '';
+const getRatingTitle = (rating: number): string =>
+  ratingLabelsMap[rating] ?? '';
 
 const ReviewForm: FC = () => {
   const dispatch = useAppDispatch();
@@ -87,7 +88,12 @@ const ReviewForm: FC = () => {
     formData.review.length <= 300;
 
   return (
-    <form className='reviews__form form' action='#' method='post' onSubmit={handleSubmit}>
+    <form
+      className='reviews__form form'
+      action='#'
+      method='post'
+      onSubmit={handleSubmit}
+    >
       <label className='reviews__label form__label' htmlFor='review'>
         Your review
       </label>
@@ -106,13 +112,16 @@ const ReviewForm: FC = () => {
             />
             <label
               htmlFor={`${rating}-stars`}
-              className={classNames('reviews__rating-label form__rating-label', {
-                'form__rating-label--active':
-                  hoveredRating > 0
-                    ? rating <= hoveredRating
-                    : rating <= formData.rating,
-                'form__rating-label--reset': hoveredRating > 0,
-              })}
+              className={classNames(
+                'reviews__rating-label form__rating-label',
+                {
+                  'form__rating-label--active':
+                    hoveredRating > 0
+                      ? rating <= hoveredRating
+                      : rating <= formData.rating,
+                  'form__rating-label--reset': hoveredRating > 0,
+                }
+              )}
               title={getRatingTitle(rating)}
               onMouseEnter={() => setHoveredRating(rating)}
               onMouseLeave={() => setHoveredRating(0)}

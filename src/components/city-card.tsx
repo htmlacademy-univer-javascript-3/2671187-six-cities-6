@@ -70,9 +70,7 @@ const CityCardComponent: FC<CityCardProps> = ({
 
       if (offer) {
         const newStatus = isBookmarked ? 0 : 1;
-        dispatch(
-          changeFavoriteStatus({ offerId: offer.id, status: newStatus })
-        )
+        dispatch(changeFavoriteStatus({ offerId: offer.id, status: newStatus }))
           .unwrap()
           .catch(() => {
             // eslint-disable-next-line no-alert

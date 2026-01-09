@@ -75,10 +75,7 @@ describe('OffersList component', () => {
 
   it('renders an empty list when no offers are provided', () => {
     render(
-      <OffersList
-        offers={[]}
-        handleSetActiveOffer={mockHandleSetActiveOffer}
-      />
+      <OffersList offers={[]} handleSetActiveOffer={mockHandleSetActiveOffer} />
     );
 
     const list = document.querySelector(
@@ -180,4 +177,3 @@ describe('OffersList component', () => {
     expect(screen.getByTestId('offer-card-2')).toBeInTheDocument();
   });
 });
-

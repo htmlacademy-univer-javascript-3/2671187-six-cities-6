@@ -7,7 +7,11 @@ describe('NetworkError', () => {
     const handleClick = vi.fn();
 
     render(
-      <NetworkError handleClick={handleClick} loadables='offers' error='Timeout' />
+      <NetworkError
+        handleClick={handleClick}
+        loadables='offers'
+        error='Timeout'
+      />
     );
 
     expect(
@@ -18,4 +22,3 @@ describe('NetworkError', () => {
     expect(handleClick).toHaveBeenCalled();
   });
 });
-

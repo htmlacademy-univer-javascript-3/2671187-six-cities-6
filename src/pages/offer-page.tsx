@@ -1,4 +1,4 @@
-import { useParams, Navigate, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useMemo, useCallback } from 'react';
 import classNames from 'classnames';
 import { useAppSelector, useAppDispatch } from '../store';
@@ -308,13 +308,13 @@ function OfferPage() {
               <ReviewsList reviews={comments} />
             </div>
           </div>
-            <section className='offer__map map'>
-              <Map
-                offers={mapOffers}
-                activeOffer={mappedCurrentOffer}
-                center={[offer.location.latitude, offer.location.longitude]}
-              />
-            </section>
+          <section className='offer__map map'>
+            <Map
+              offers={mapOffers}
+              activeOffer={mappedCurrentOffer}
+              center={[offer.location.latitude, offer.location.longitude]}
+            />
+          </section>
         </section>
         <div className='container'>
           <section className='near-places places'>

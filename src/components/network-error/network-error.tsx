@@ -24,4 +24,3 @@ function NetworkError({ handleClick, loadables, error }: Props): JSX.Element {
 }
 
 export default NetworkError;
-

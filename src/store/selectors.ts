@@ -12,11 +12,12 @@ export const selectAuthorizationStatus = (state: RootState) =>
 export const selectUser = (state: RootState) => state.auth.user;
 export const selectCurrentOffer = (state: RootState) =>
   state.offerDetails.currentOffer;
-const selectNearbyOffersRaw = (state: RootState) => state.offerDetails.nearbyOffers;
+const selectNearbyOffersRaw = (state: RootState) =>
+  state.offerDetails.nearbyOffers;
 
 export const selectNearbyOffers = createSelector(
   [selectNearbyOffersRaw],
-  (offers) => offers.slice(0, 3)
+  offers => offers.slice(0, 3)
 );
 
 export const selectComments = (state: RootState) => state.offerDetails.comments;
@@ -32,11 +33,9 @@ export const selectFavoritesError = (state: RootState) => state.favorites.error;
 
 export const selectCommentsSortedLimited = createSelector(
   [selectComments],
-  (comments) =>
+  comments =>
     [...comments]
-      .sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      )
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, 10)
 );
 
