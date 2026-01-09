@@ -21,7 +21,7 @@ function CitiesList({ cities, currentCity }: Props): JSX.Element {
   return (
     <section className='locations container'>
       <ul className='locations__list tabs__list'>
-        {cities.map((city) => {
+        {cities.map(city => {
           const className = classNames('locations__item-link', 'tabs__item', {
             'tabs__item--active': city === currentCity,
           });
@@ -31,7 +31,7 @@ function CitiesList({ cities, currentCity }: Props): JSX.Element {
               <a
                 className={className}
                 href='#'
-                onClick={(e) => {
+                onClick={e => {
                   e.preventDefault();
                   handleCityClick(city);
                 }}

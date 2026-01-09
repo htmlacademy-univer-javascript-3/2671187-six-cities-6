@@ -1,12 +1,21 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useCallback } from 'react';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { selectAuthorizationStatus } from '../../store/selectors';
+import { changeFavoriteStatus } from '../../store/api-actions';
 
 type NearbyOfferCardProps = {
   offer: Offer;
 };
 
-function NearbyOfferCard({ offer }: NearbyOfferCardProps): JSX.Element {
+function NearbyOfferCardComponent({
+  offer,
+}: NearbyOfferCardProps): JSX.Element {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+
   const {
     isPremium = false,
     isFavorite: isBookmarked = false,
@@ -25,6 +34,22 @@ function NearbyOfferCard({ offer }: NearbyOfferCardProps): JSX.Element {
         'place-card__bookmark-button--active': isBookmarked,
       }),
     [isBookmarked]
+  );
+
+  const handleBookmarkClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (authorizationStatus !== 'AUTH') {
+        navigate('/login');
+        return;
+      }
+
+      const newStatus = isBookmarked ? 0 : 1;
+      dispatch(changeFavoriteStatus({ offerId: offer.id, status: newStatus }));
+    },
+    [authorizationStatus, navigate, isBookmarked, dispatch, offer.id]
   );
 
   return (
@@ -51,7 +76,11 @@ function NearbyOfferCard({ offer }: NearbyOfferCardProps): JSX.Element {
             <b className='place-card__price-value'>&euro;{price}</b>
             <span className='place-card__price-text'>&#47;&nbsp;night</span>
           </div>
-          <button className={bookmarkButtonClassName} type='button'>
+          <button
+            className={bookmarkButtonClassName}
+            type='button'
+            onClick={handleBookmarkClick}
+          >
             <svg className='place-card__bookmark-icon' width='18' height='19'>
               <use xlinkHref='#icon-bookmark'></use>
             </svg>
@@ -75,4 +104,7 @@ function NearbyOfferCard({ offer }: NearbyOfferCardProps): JSX.Element {
   );
 }
 
-export default memo(NearbyOfferCard);
+const NearbyOfferCard = memo(NearbyOfferCardComponent);
+NearbyOfferCard.displayName = 'NearbyOfferCard';
+
+export default NearbyOfferCard;

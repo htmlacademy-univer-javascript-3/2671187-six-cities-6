@@ -28,7 +28,12 @@ function SortingOptions(): JSX.Element {
   );
 
   const sortingOptions: SortingType[] = useMemo(
-    () => ['popular', 'price-low-to-high', 'price-high-to-low', 'top-rated-first'],
+    () => [
+      'popular',
+      'price-low-to-high',
+      'price-high-to-low',
+      'top-rated-first',
+    ],
     []
   );
 
@@ -75,4 +80,3 @@ function SortingOptions(): JSX.Element {
 }
 
 export default SortingOptions;
-

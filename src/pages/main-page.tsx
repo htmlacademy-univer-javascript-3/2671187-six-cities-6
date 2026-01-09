@@ -5,6 +5,7 @@ import Map from '../components/map';
 import SortingOptions from '../components/SortingOptions';
 import Spinner from '../components/spinner';
 import Header from '../components/header';
+import EmptyState from '../components/empty-state';
 import { useAppSelector, useAppDispatch } from '../store';
 import { fetchOffers } from '../store/api-actions';
 import { selectMainPageData } from '../store/selectors';
@@ -32,21 +33,37 @@ const MainPage: FC = () => {
     dispatch(fetchOffers());
   }, [dispatch]);
 
+  const isEmpty = !isLoading && !error && offers.length === 0;
+  const mainClassName = isEmpty
+    ? 'page__main page__main--index page__main--index-empty'
+    : 'page__main page__main--index';
+
   return (
     <div className='page page--gray page--main'>
       <Header />
 
-      <main className='page__main page__main--index'>
+      <main className={mainClassName}>
         <h1 className='visually-hidden'>Cities</h1>
         <div className='tabs'>
           <CitiesList cities={CITIES} currentCity={cityTab} />
         </div>
         <div className='cities'>
-          <div className='cities__places-container container'>
-            <section className='cities__places places'>
-              <h2 className='visually-hidden'>Places</h2>
-              {isLoading && <Spinner />}
-              {error && !isLoading && (
+          <div
+            className={
+              isEmpty
+                ? 'cities__places-container cities__places-container--empty container'
+                : 'cities__places-container container'
+            }
+          >
+            {isLoading && (
+              <section className='cities__places places'>
+                <h2 className='visually-hidden'>Places</h2>
+                <Spinner />
+              </section>
+            )}
+            {error && !isLoading && (
+              <section className='cities__places places'>
+                <h2 className='visually-hidden'>Places</h2>
                 <div style={{ textAlign: 'center', padding: '20px' }}>
                   <p>Error loading offers: {error}</p>
                   <button
@@ -57,9 +74,13 @@ const MainPage: FC = () => {
                     Try again
                   </button>
                 </div>
-              )}
-              {!isLoading && !error && (
-                <>
+              </section>
+            )}
+            {isEmpty && <EmptyState cityName={cityTab} />}
+            {!isLoading && !error && !isEmpty && (
+              <>
+                <section className='cities__places places'>
+                  <h2 className='visually-hidden'>Places</h2>
                   <b className='places__found'>
                     {offers.length} places to stay in {cityTab}
                   </b>
@@ -68,18 +89,18 @@ const MainPage: FC = () => {
                     offers={offers}
                     setActiveOffer={handleSetActiveOffer}
                   />
-                </>
-              )}
-            </section>
-            <div className='cities__right-section'>
-              <section className='cities__map map'>
-                <Map
-                  offers={offers}
-                  activeOffer={activeOffer}
-                  center={mapCenter}
-                />
-              </section>
-            </div>
+                </section>
+                <div className='cities__right-section'>
+                  <section className='cities__map map'>
+                    <Map
+                      offers={offers}
+                      activeOffer={activeOffer}
+                      center={mapCenter}
+                    />
+                  </section>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </main>

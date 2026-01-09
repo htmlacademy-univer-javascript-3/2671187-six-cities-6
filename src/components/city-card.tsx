@@ -1,6 +1,9 @@
 import { FC, memo, useMemo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
+import { useAppDispatch, useAppSelector } from '../store';
+import { selectAuthorizationStatus } from '../store/selectors';
+import { changeFavoriteStatus } from '../store/api-actions';
 
 interface CityCardProps {
   mark?: string;
@@ -14,7 +17,7 @@ interface CityCardProps {
   offer?: Offer;
 }
 
-const CityCard: FC<CityCardProps> = ({
+const CityCardComponent: FC<CityCardProps> = ({
   mark,
   image,
   price,
@@ -25,6 +28,10 @@ const CityCard: FC<CityCardProps> = ({
   onCardHover,
   offer,
 }) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+
   // Мемоизируем вычисление класса для кнопки закладок
   const bookmarkButtonClassName = useMemo(
     () =>
@@ -46,6 +53,26 @@ const CityCard: FC<CityCardProps> = ({
       onCardHover(null);
     }
   }, [onCardHover]);
+
+  const handleBookmarkClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (authorizationStatus !== 'AUTH') {
+        navigate('/login');
+        return;
+      }
+
+      if (offer) {
+        const newStatus = isBookmarked ? 0 : 1;
+        dispatch(
+          changeFavoriteStatus({ offerId: offer.id, status: newStatus })
+        );
+      }
+    },
+    [authorizationStatus, navigate, isBookmarked, dispatch, offer]
+  );
 
   return (
     <article
@@ -88,6 +115,7 @@ const CityCard: FC<CityCardProps> = ({
           <button
             className={bookmarkButtonClassName}
             type='button'
+            onClick={handleBookmarkClick}
             aria-label={
               isBookmarked ? 'Remove from bookmarks' : 'Add to bookmarks'
             }
@@ -121,4 +149,7 @@ const CityCard: FC<CityCardProps> = ({
   );
 };
 
-export default memo(CityCard);
+const CityCard = memo(CityCardComponent);
+CityCard.displayName = 'CityCard';
+
+export default CityCard;

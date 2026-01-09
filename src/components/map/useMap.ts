@@ -56,7 +56,7 @@ export const useMap = ({ offers, activeOffer = null, center }: UseMapProps) => {
     }
 
     // Очистка существующих маркеров
-    markersRef.current.forEach((marker) => {
+    markersRef.current.forEach(marker => {
       mapInstanceRef.current!.removeLayer(marker);
     });
     markersRef.current = [];

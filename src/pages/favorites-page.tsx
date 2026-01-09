@@ -1,74 +1,53 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import FavoritesList from '../components/favorites-list';
+import Header from '../components/header';
+import { useAppSelector, useAppDispatch } from '../store';
+import { fetchFavorites } from '../store/api-actions';
+import { selectFavorites } from '../store/selectors';
 
-interface FavoritesPageProps {
-  favorites: FavoriteOffer[];
-}
+const FavoritesPage: FC = () => {
+  const dispatch = useAppDispatch();
+  const favorites = useAppSelector(selectFavorites);
 
-const FavoritesPage: FC<FavoritesPageProps> = ({ favorites }) => (
-  <div className='page'>
-    <header className='header'>
-      <div className='container'>
-        <div className='header__wrapper'>
-          <div className='header__left'>
-            <Link className='header__logo-link' to='/'>
-              <img
-                className='header__logo'
-                src='/img/logo.svg'
-                alt='6 cities logo'
-                width='81'
-                height='41'
-              />
-            </Link>
-          </div>
-          <nav className='header__nav'>
-            <ul className='header__nav-list'>
-              <li className='header__nav-item user'>
-                <Link
-                  className='header__nav-link header__nav-link--profile'
-                  to='/favorites'
-                >
-                  <div className='header__avatar-wrapper user__avatar-wrapper'></div>
-                  <span className='header__user-name user__name'>
-                    Oliver.conner@gmail.com
-                  </span>
-                  <span className='header__favorite-count'>
-                    {favorites.length}
-                  </span>
-                </Link>
-              </li>
-              <li className='header__nav-item'>
-                <a className='header__nav-link' href='/logout'>
-                  <span className='header__signout'>Sign out</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
+  useEffect(() => {
+    dispatch(fetchFavorites());
+  }, [dispatch]);
+
+  const hasFavorites = favorites.length > 0;
+
+  return (
+    <div className='page'>
+      <Header />
+
+      <main className='page__main page__main--favorites'>
+        <div className='page__favorites-container container'>
+          <section className='favorites'>
+            <h1 className='favorites__title'>Saved listing</h1>
+            {hasFavorites ? (
+              <FavoritesList favorites={favorites} />
+            ) : (
+              <div style={{ textAlign: 'center', padding: '20px' }}>
+                <p>You have no favorite offers yet.</p>
+                <Link to='/'>Go back to main page</Link>
+              </div>
+            )}
+          </section>
         </div>
-      </div>
-    </header>
-
-    <main className='page__main page__main--favorites'>
-      <div className='page__favorites-container container'>
-        <section className='favorites'>
-          <h1 className='favorites__title'>Saved listing</h1>
-          <FavoritesList favorites={favorites} />
-        </section>
-      </div>
-    </main>
-    <footer className='footer container'>
-      <Link className='footer__logo-link' to='/'>
-        <img
-          className='footer__logo'
-          src='/img/logo.svg'
-          alt='6 cities logo'
-          width='64'
-          height='33'
-        />
-      </Link>
-    </footer>
-  </div>
-);
+      </main>
+      <footer className='footer container'>
+        <Link className='footer__logo-link' to='/'>
+          <img
+            className='footer__logo'
+            src='/img/logo.svg'
+            alt='6 cities logo'
+            width='64'
+            height='33'
+          />
+        </Link>
+      </footer>
+    </div>
+  );
+};
 
 export default FavoritesPage;
