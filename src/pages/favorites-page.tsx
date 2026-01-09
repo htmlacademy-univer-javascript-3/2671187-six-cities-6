@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import FavoritesList from '../components/favorites-list';
+import FavoritesList from '../components/favorites-list/favorites-list';
 import Header from '../components/header';
 import { useAppSelector, useAppDispatch } from '../store';
 import { fetchFavorites } from '../store/api-actions';

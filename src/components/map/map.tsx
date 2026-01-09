@@ -1,4 +1,4 @@
-import { useMap } from './useMap';
+import { useMap } from '../../hooks/use-map';
 
 type MapProps = {
   offers: Offer[];
@@ -15,7 +15,9 @@ function Map({
 }: MapProps): JSX.Element {
   const { mapRef } = useMap({ offers, activeOffer, center });
 
-  return <div ref={mapRef} style={{ height }}></div>;
+  return (
+    <div ref={mapRef} style={{ height }} data-testid='map-container'></div>
+  );
 }
 
 export default Map;

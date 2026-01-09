@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import FavoritesCard from './favorites-card';
+import FavoritesCard from '../favorites-card/favorites-card';
 
 interface FavoritesListProps {
   favorites: FavoriteOffer[];
