@@ -312,10 +312,14 @@ describe('offerDetailsSlice reducer', () => {
         reviews: [],
       };
 
-      const action = changeFavoriteStatus.fulfilled(differentOffer, 'requestId', {
-        offerId: '2',
-        status: 1,
-      });
+      const action = changeFavoriteStatus.fulfilled(
+        differentOffer,
+        'requestId',
+        {
+          offerId: '2',
+          status: 1,
+        }
+      );
       const result = offerDetailsReducer(stateWithOffer, action);
 
       expect(result.currentOffer?.isFavorite).toBe(false);
@@ -355,10 +359,14 @@ describe('offerDetailsSlice reducer', () => {
         id: '3',
         isFavorite: true,
       };
-      const action = changeFavoriteStatus.fulfilled(differentOffer, 'requestId', {
-        offerId: '3',
-        status: 1,
-      });
+      const action = changeFavoriteStatus.fulfilled(
+        differentOffer,
+        'requestId',
+        {
+          offerId: '3',
+          status: 1,
+        }
+      );
       const result = offerDetailsReducer(stateWithNearby, action);
 
       expect(result.nearbyOffers[0].isFavorite).toBe(false);
@@ -402,4 +410,3 @@ describe('offerDetailsSlice reducer', () => {
     });
   });
 });
-

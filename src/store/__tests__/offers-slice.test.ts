@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  changeCity,
-  setOffers,
-  changeSorting,
-} from '../slices/offers-slice';
+import { changeCity, setOffers, changeSorting } from '../slices/offers-slice';
 import { fetchOffers, changeFavoriteStatus } from '../api-actions';
 import { logout } from '../slices/auth-slice';
 import offersReducer from '../slices/offers-slice';
@@ -85,7 +81,7 @@ describe('offersSlice reducer', () => {
 
     it('should change to different cities', () => {
       const cities: City[] = ['Cologne', 'Brussels', 'Hamburg', 'Dusseldorf'];
-      
+
       cities.forEach(city => {
         const action = changeCity(city);
         const result = offersReducer(initialState, action);
@@ -286,4 +282,3 @@ describe('offersSlice reducer', () => {
     });
   });
 });
-

@@ -14,18 +14,18 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => (
 describe('App Routing', () => {
   const TestRoutes = () => (
     <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route path='/' element={<MainPage />} />
+      <Route path='/login' element={<LoginPage />} />
       <Route
-        path="/favorites"
+        path='/favorites'
         element={
           <PrivateRoute>
             <FavoritesPage />
           </PrivateRoute>
         }
       />
-      <Route path="/offer/:id" element={<OfferPage />} />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path='/offer/:id' element={<OfferPage />} />
+      <Route path='*' element={<NotFoundPage />} />
     </Routes>
   );
 
@@ -71,14 +71,14 @@ describe('App Routing', () => {
 
   it('should display OfferPage with different offer IDs', () => {
     const offerIds = ['1', '999', 'abc123'];
-    
+
     offerIds.forEach(id => {
       const { unmount } = render(
         <MemoryRouter initialEntries={[`/offer/${id}`]}>
           <TestRoutes />
         </MemoryRouter>
       );
-      
+
       expect(screen.getByText('Offer Page Component')).toBeInTheDocument();
       unmount();
     });
@@ -95,15 +95,20 @@ describe('App Routing', () => {
   });
 
   it('should display NotFoundPage for various invalid routes', () => {
-    const invalidRoutes = ['/invalid', '/test/123', '/offer', '/favorites/extra'];
-    
+    const invalidRoutes = [
+      '/invalid',
+      '/test/123',
+      '/offer',
+      '/favorites/extra',
+    ];
+
     invalidRoutes.forEach(route => {
       const { unmount } = render(
         <MemoryRouter initialEntries={[route]}>
           <TestRoutes />
         </MemoryRouter>
       );
-      
+
       expect(screen.getByText('Not Found Page Component')).toBeInTheDocument();
       unmount();
     });
@@ -134,4 +139,3 @@ describe('App Routing', () => {
     expect(screen.getByText('Favorites Page Component')).toBeInTheDocument();
   });
 });
-

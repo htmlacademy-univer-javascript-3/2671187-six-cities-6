@@ -129,4 +129,3 @@ describe('SortingOptions component', () => {
     expect(arrowIcon).toBeInTheDocument();
   });
 });
-

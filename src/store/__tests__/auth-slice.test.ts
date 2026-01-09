@@ -200,4 +200,3 @@ describe('authSlice reducer', () => {
     });
   });
 });
-

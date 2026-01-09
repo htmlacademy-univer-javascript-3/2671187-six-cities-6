@@ -4,13 +4,13 @@ import EmptyState from '../empty-state/empty-state';
 
 describe('EmptyState component', () => {
   it('should display empty message', () => {
-    render(<EmptyState cityName="Paris" />);
+    render(<EmptyState cityName='Paris' />);
 
     expect(screen.getByText('No places to stay available')).toBeInTheDocument();
   });
 
   it('should display city name in message', () => {
-    render(<EmptyState cityName="Amsterdam" />);
+    render(<EmptyState cityName='Amsterdam' />);
 
     expect(
       screen.getByText(
@@ -20,7 +20,7 @@ describe('EmptyState component', () => {
   });
 
   it('should have correct CSS classes', () => {
-    const { container } = render(<EmptyState cityName="Paris" />);
+    const { container } = render(<EmptyState cityName='Paris' />);
 
     expect(container.firstChild).toHaveClass('cities__no-places');
     expect(
@@ -34,24 +34,24 @@ describe('EmptyState component', () => {
   });
 
   it('should display different cities correctly', () => {
-    const { rerender } = render(<EmptyState cityName="Paris" />);
+    const { rerender } = render(<EmptyState cityName='Paris' />);
     expect(screen.getByText(/Paris/)).toBeInTheDocument();
 
-    rerender(<EmptyState cityName="Cologne" />);
+    rerender(<EmptyState cityName='Cologne' />);
     expect(screen.getByText(/Cologne/)).toBeInTheDocument();
 
-    rerender(<EmptyState cityName="Brussels" />);
+    rerender(<EmptyState cityName='Brussels' />);
     expect(screen.getByText(/Brussels/)).toBeInTheDocument();
 
-    rerender(<EmptyState cityName="Hamburg" />);
+    rerender(<EmptyState cityName='Hamburg' />);
     expect(screen.getByText(/Hamburg/)).toBeInTheDocument();
 
-    rerender(<EmptyState cityName="Dusseldorf" />);
+    rerender(<EmptyState cityName='Dusseldorf' />);
     expect(screen.getByText(/Dusseldorf/)).toBeInTheDocument();
   });
 
   it('should render correct structure', () => {
-    const { container } = render(<EmptyState cityName="Paris" />);
+    const { container } = render(<EmptyState cityName='Paris' />);
 
     const section = container.querySelector('section.cities__no-places');
     expect(section).toBeInTheDocument();
@@ -67,4 +67,3 @@ describe('EmptyState component', () => {
     expect(description).toBeInTheDocument();
   });
 });
-

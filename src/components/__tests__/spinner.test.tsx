@@ -47,12 +47,11 @@ describe('Spinner component', () => {
 
     const outerDiv = container.firstChild as HTMLElement;
     expect(outerDiv.tagName).toBe('DIV');
-    
+
     const innerDiv = outerDiv.querySelector('div');
     expect(innerDiv).toBeInTheDocument();
-    
+
     const styleTag = outerDiv.querySelector('style');
     expect(styleTag).toBeInTheDocument();
   });
 });
-

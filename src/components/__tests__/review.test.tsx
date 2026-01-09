@@ -84,12 +84,12 @@ describe('Review component', () => {
   });
 
   it('should render rating 4.5 correctly (rounded to 5)', () => {
-    const reviewWith4_5Stars: Review = {
+    const reviewWith4Point5Stars: Review = {
       ...mockReview,
       rating: 4.5,
     };
 
-    render(<Review review={reviewWith4_5Stars} />);
+    render(<Review review={reviewWith4Point5Stars} />);
 
     const ratingSpan = document.querySelector('.reviews__stars span');
     expect(ratingSpan).toHaveStyle({ width: '100%' });
@@ -133,4 +133,3 @@ describe('Review component', () => {
     expect(screen.getByText(reviewWithNonPro.user.name)).toBeInTheDocument();
   });
 });
-
