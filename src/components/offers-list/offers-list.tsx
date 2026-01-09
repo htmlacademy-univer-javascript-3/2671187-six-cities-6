@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import CityCard from '../city-card';
 
 type Props = {
@@ -7,9 +7,12 @@ type Props = {
 };
 
 const OffersList: FC<Props> = ({ offers, setActiveOffer }) => {
-  const handleCardHover = (offer: Offer | null) => {
-    setActiveOffer(offer);
-  };
+  const handleCardHover = useCallback(
+    (offer: Offer | null) => {
+      setActiveOffer(offer);
+    },
+    [setActiveOffer]
+  );
 
   return (
     <div className='cities__places-list places__list tabs__content'>

@@ -1,3 +1,4 @@
+import { memo, useMemo } from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
@@ -15,11 +16,15 @@ function NearbyOfferCard({ offer }: NearbyOfferCardProps): JSX.Element {
     title,
     type,
   } = offer;
-  const ratingPercent = rating * 20;
-  const bookmarkButtonClassName = classNames(
-    'place-card__bookmark-button',
-    'button',
-    { 'place-card__bookmark-button--active': isBookmarked }
+
+  // Мемоизируем вычисления
+  const ratingPercent = useMemo(() => rating * 20, [rating]);
+  const bookmarkButtonClassName = useMemo(
+    () =>
+      classNames('place-card__bookmark-button', 'button', {
+        'place-card__bookmark-button--active': isBookmarked,
+      }),
+    [isBookmarked]
   );
 
   return (
@@ -70,4 +75,4 @@ function NearbyOfferCard({ offer }: NearbyOfferCardProps): JSX.Element {
   );
 }
 
-export default NearbyOfferCard;
+export default memo(NearbyOfferCard);

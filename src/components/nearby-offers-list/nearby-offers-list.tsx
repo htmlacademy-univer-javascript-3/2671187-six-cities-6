@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import NearbyOfferCard from '../nearby-offer-card';
 
 type NearbyOffersListProps = {
@@ -14,4 +15,4 @@ function NearbyOffersList({ offers }: NearbyOffersListProps): JSX.Element {
   );
 }
 
-export default NearbyOffersList;
+export default memo(NearbyOffersList);

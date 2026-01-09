@@ -1,34 +1,36 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { changeSorting } from '../../store/reducer';
+import { changeSorting } from '../../store/action';
+import { selectSorting } from '../../store/selectors';
 import { SORTING_LABELS } from './utils';
 
 function SortingOptions(): JSX.Element {
   const dispatch = useAppDispatch();
-  const currentSorting = useAppSelector(state => state.sorting);
+  const currentSorting = useAppSelector(selectSorting);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSortingChange = (sortingType: SortingType) => {
-    dispatch(changeSorting(sortingType));
-    setIsOpen(false);
-  };
+  const handleSortingChange = useCallback(
+    (sortingType: SortingType) => {
+      dispatch(changeSorting(sortingType));
+      setIsOpen(false);
+    },
+    [dispatch]
+  );
 
-  const handleKeyDown = (
-    event: React.KeyboardEvent,
-    sortingType: SortingType
-  ) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      handleSortingChange(sortingType);
-    }
-  };
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent, sortingType: SortingType) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handleSortingChange(sortingType);
+      }
+    },
+    [handleSortingChange]
+  );
 
-  const sortingOptions: SortingType[] = [
-    'popular',
-    'price-low-to-high',
-    'price-high-to-low',
-    'top-rated-first',
-  ];
+  const sortingOptions: SortingType[] = useMemo(
+    () => ['popular', 'price-low-to-high', 'price-high-to-low', 'top-rated-first'],
+    []
+  );
 
   return (
     <form className='places__sorting' action='#' method='get'>
@@ -73,3 +75,4 @@ function SortingOptions(): JSX.Element {
 }
 
 export default SortingOptions;
+

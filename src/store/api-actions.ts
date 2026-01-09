@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import { setOffers, setAuthStatus, setUser } from './reducer';
+import { setOffers } from './slices/offers-slice';
+import { setAuthStatus, setUser } from './slices/auth-slice';
 import { AppDispatch, RootState } from './index';
 
 export const fetchOffers = createAsyncThunk<

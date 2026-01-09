@@ -1,37 +1,34 @@
 import { Link, useParams, Navigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAppSelector, useAppDispatch } from '../store';
 import ReviewsList from '../components/reviews-list';
 import Map from '../components/map';
 import NearbyOffersList from '../components/nearby-offers-list';
 import Spinner from '../components/spinner';
+import Header from '../components/header';
 import {
   fetchOfferDetails,
   fetchNearbyOffers,
   fetchComments,
 } from '../store/api-actions';
 import { getWidthByRatingPercent } from '../utils';
-import { logout } from '../store/action';
+import {
+  selectCurrentOffer,
+  selectNearbyOffers,
+  selectComments,
+  selectIsOfferLoading,
+  selectAuthorizationStatus,
+  selectUser,
+} from '../store/selectors';
 
 function OfferPage() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
 
-  const {
-    currentOffer,
-    nearbyOffers,
-    comments,
-    isOfferLoading,
-    authorizationStatus,
-    user,
-  } = useAppSelector(state => ({
-    currentOffer: state.currentOffer,
-    nearbyOffers: state.nearbyOffers,
-    comments: state.comments,
-    isOfferLoading: state.isOfferLoading,
-    authorizationStatus: state.authorizationStatus,
-    user: state.user,
-  }));
+  const currentOffer = useAppSelector(selectCurrentOffer);
+  const nearbyOffers = useAppSelector(selectNearbyOffers);
+  const comments = useAppSelector(selectComments);
+  const isOfferLoading = useAppSelector(selectIsOfferLoading);
 
   useEffect(() => {
     if (id) {
@@ -41,74 +38,19 @@ function OfferPage() {
     }
   }, [dispatch, id]);
 
-  const isAuthorized = authorizationStatus === 'AUTH';
-  const userEmail = user?.email || '';
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    dispatch(logout());
-  };
+  // Мемоизируем массив offers для Map
+  const mapOffers = useMemo(() => {
+    if (!currentOffer) {
+      return nearbyOffers;
+    }
+    return [...nearbyOffers, currentOffer];
+  }, [nearbyOffers, currentOffer]);
 
   // Спиннер
   if (isOfferLoading || !currentOffer) {
     return (
       <div className='page'>
-        <header className='header'>
-          <div className='container'>
-            <div className='header__wrapper'>
-              <div className='header__left'>
-                <Link className='header__logo-link' to='/'>
-                  <img
-                    className='header__logo'
-                    src='/img/logo.svg'
-                    alt='6 cities logo'
-                    width='81'
-                    height='41'
-                  />
-                </Link>
-              </div>
-              {isAuthorized ? (
-                <nav className='header__nav'>
-                  <ul className='header__nav-list'>
-                    <li className='header__nav-item user'>
-                      <Link
-                        className='header__nav-link header__nav-link--profile'
-                        to='/favorites'
-                      >
-                        <div className='header__avatar-wrapper user__avatar-wrapper'></div>
-                        <span className='header__user-name user__name'>
-                          {userEmail}
-                        </span>
-                      </Link>
-                    </li>
-                    <li className='header__nav-item'>
-                      <a
-                        className='header__nav-link'
-                        href='#'
-                        onClick={e => {
-                          e.preventDefault();
-                          handleLogout();
-                        }}
-                      >
-                        <span className='header__signout'>Sign out</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-              ) : (
-                <nav className='header__nav'>
-                  <ul className='header__nav-list'>
-                    <li className='header__nav-item'>
-                      <Link className='header__nav-link' to='/login'>
-                        <span className='header__login'>Sign in</span>
-                      </Link>
-                    </li>
-                  </ul>
-                </nav>
-              )}
-            </div>
-          </div>
-        </header>
+        <Header />
         <main className='page__main page__main--offer'>
           <div style={{ textAlign: 'center', padding: '50px' }}>
             <Spinner />
@@ -127,62 +69,7 @@ function OfferPage() {
 
   return (
     <div className='page'>
-      <header className='header'>
-        <div className='container'>
-          <div className='header__wrapper'>
-            <div className='header__left'>
-              <Link className='header__logo-link' to='/'>
-                <img
-                  className='header__logo'
-                  src='/img/logo.svg'
-                  alt='6 cities logo'
-                  width='81'
-                  height='41'
-                />
-              </Link>
-            </div>
-            {isAuthorized ? (
-              <nav className='header__nav'>
-                <ul className='header__nav-list'>
-                  <li className='header__nav-item user'>
-                    <Link
-                      className='header__nav-link header__nav-link--profile'
-                      to='/favorites'
-                    >
-                      <div className='header__avatar-wrapper user__avatar-wrapper'></div>
-                      <span className='header__user-name user__name'>
-                        {userEmail}
-                      </span>
-                    </Link>
-                  </li>
-                  <li className='header__nav-item'>
-                    <a
-                      className='header__nav-link'
-                      href='#'
-                      onClick={e => {
-                        e.preventDefault();
-                        handleLogout();
-                      }}
-                    >
-                      <span className='header__signout'>Sign out</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            ) : (
-              <nav className='header__nav'>
-                <ul className='header__nav-list'>
-                  <li className='header__nav-item'>
-                    <Link className='header__nav-link' to='/login'>
-                      <span className='header__login'>Sign in</span>
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
-            )}
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className='page__main page__main--offer'>
         <section className='offer'>
@@ -285,7 +172,7 @@ function OfferPage() {
           </div>
           <section className='offer__map map'>
             <Map
-              offers={[...nearbyOffers, offer]}
+              offers={mapOffers}
               activeOffer={offer}
               center={[offer.location.latitude, offer.location.longitude]}
             />

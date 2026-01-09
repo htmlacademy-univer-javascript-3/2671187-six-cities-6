@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 
 interface FavoritesCardProps {
   offer: FavoriteOffer;
 }
 
-const FavoritesCard: FC<FavoritesCardProps> = ({ offer }) => (
+const FavoritesCard: FC<FavoritesCardProps> = memo(({ offer }) => (
   <article className='favorites__card place-card'>
     {offer.isPremium && (
       <div className='place-card__mark'>
@@ -51,6 +51,8 @@ const FavoritesCard: FC<FavoritesCardProps> = ({ offer }) => (
       <p className='place-card__type'>{offer.type}</p>
     </div>
   </article>
-);
+));
+
+FavoritesCard.displayName = 'FavoritesCard';
 
 export default FavoritesCard;
