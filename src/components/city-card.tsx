@@ -1,5 +1,6 @@
-import { FC } from 'react';
+import { FC, memo, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import classNames from 'classnames';
 
 interface CityCardProps {
   mark?: string;
@@ -24,17 +25,27 @@ const CityCard: FC<CityCardProps> = ({
   onCardHover,
   offer,
 }) => {
-  const handleMouseEnter = () => {
+  // Мемоизируем вычисление класса для кнопки закладок
+  const bookmarkButtonClassName = useMemo(
+    () =>
+      classNames('place-card__bookmark-button', 'button', {
+        'place-card__bookmark-button--active': isBookmarked,
+      }),
+    [isBookmarked]
+  );
+
+  // Мемоизируем обработчики событий
+  const handleMouseEnter = useCallback(() => {
     if (onCardHover && offer) {
       onCardHover(offer);
     }
-  };
+  }, [onCardHover, offer]);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     if (onCardHover) {
       onCardHover(null);
     }
-  };
+  }, [onCardHover]);
 
   return (
     <article
@@ -75,9 +86,7 @@ const CityCard: FC<CityCardProps> = ({
             <span className='place-card__price-text'>&#47;&nbsp;night</span>
           </div>
           <button
-            className={`place-card__bookmark-button button ${
-              isBookmarked ? 'place-card__bookmark-button--active' : ''
-            }`}
+            className={bookmarkButtonClassName}
             type='button'
             aria-label={
               isBookmarked ? 'Remove from bookmarks' : 'Add to bookmarks'
@@ -112,4 +121,4 @@ const CityCard: FC<CityCardProps> = ({
   );
 };
 
-export default CityCard;
+export default memo(CityCard);

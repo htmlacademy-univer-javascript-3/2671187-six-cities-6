@@ -7,12 +7,14 @@ const defaultIcon = L.icon({
   iconUrl: URL_MARKER_DEFAULT,
   iconSize: [27, 39],
   iconAnchor: [13.5, 39],
+  popupAnchor: [0, -20], // Position popup 20px above the marker
 });
 
 const activeIcon = L.icon({
   iconUrl: URL_MARKER_CURRENT,
   iconSize: [27, 39],
   iconAnchor: [13.5, 39],
+  popupAnchor: [0, -20], // Position popup 20px above the marker
 });
 
 type UseMapProps = {
@@ -47,19 +49,19 @@ export const useMap = ({ offers, activeOffer = null, center }: UseMapProps) => {
     ).addTo(mapInstanceRef.current);
   }, [center]);
 
-  // Обновление маркеров при изменении предложений или активного предложения
+  // Обновление маркеров при изменении предложений
   useEffect(() => {
     if (!mapInstanceRef.current) {
       return;
     }
 
     // Очистка существующих маркеров
-    markersRef.current.forEach(marker => {
-      mapInstanceRef.current?.removeLayer(marker);
+    markersRef.current.forEach((marker) => {
+      mapInstanceRef.current!.removeLayer(marker);
     });
     markersRef.current = [];
 
-    // Добавление маркеров для всех предложений
+    // Создание новых маркеров
     offers.forEach(offer => {
       if (offer.location.latitude && offer.location.longitude) {
         const isActive = activeOffer?.id === offer.id;

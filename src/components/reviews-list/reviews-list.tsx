@@ -1,15 +1,15 @@
+import { memo } from 'react';
 import { Review } from '../review';
 import ReviewForm from '../review-form';
 import { useAppSelector } from '../../store';
+import { selectAuthorizationStatus } from '../../store/selectors';
 
 type ReviewsListProps = {
   reviews: Review[];
 };
 
 function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
-  const { authorizationStatus } = useAppSelector(state => ({
-    authorizationStatus: state.authorizationStatus,
-  }));
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   return (
     <section className='offer__reviews reviews'>
@@ -27,4 +27,4 @@ function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
   );
 }
 
-export default ReviewsList;
+export default memo(ReviewsList);
