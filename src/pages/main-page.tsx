@@ -6,18 +6,11 @@ import SortingOptions from '../components/SortingOptions';
 import Spinner from '../components/spinner';
 import Header from '../components/header';
 import EmptyState from '../components/empty-state';
+import NetworkError from '../components/network-error';
 import { useAppSelector, useAppDispatch } from '../store';
 import { fetchOffers } from '../store/api-actions';
 import { selectMainPageData } from '../store/selectors';
-
-const CITIES: City[] = [
-  'Paris',
-  'Cologne',
-  'Brussels',
-  'Amsterdam',
-  'Hamburg',
-  'Dusseldorf',
-];
+import { CITIES } from '../store/constants';
 
 const MainPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -29,8 +22,16 @@ const MainPage: FC = () => {
     setActiveOffer(offer);
   }, []);
 
-  useEffect(() => {
+  const handleRetryOffers = useCallback(() => {
     dispatch(fetchOffers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchOffers())
+      .unwrap()
+      .catch(() => {
+        // Ошибка уже попадёт в состояние offersSlice
+      });
   }, [dispatch]);
 
   const isEmpty = !isLoading && !error && offers.length === 0;
@@ -64,16 +65,11 @@ const MainPage: FC = () => {
             {error && !isLoading && (
               <section className='cities__places places'>
                 <h2 className='visually-hidden'>Places</h2>
-                <div style={{ textAlign: 'center', padding: '20px' }}>
-                  <p>Error loading offers: {error}</p>
-                  <button
-                    onClick={() => {
-                      dispatch(fetchOffers());
-                    }}
-                  >
-                    Try again
-                  </button>
-                </div>
+                <NetworkError
+                  handleClick={handleRetryOffers}
+                  loadables='offers'
+                  error={error}
+                />
               </section>
             )}
             {isEmpty && <EmptyState cityName={cityTab} />}
@@ -87,7 +83,7 @@ const MainPage: FC = () => {
                   <SortingOptions />
                   <OffersList
                     offers={offers}
-                    setActiveOffer={handleSetActiveOffer}
+                    handleSetActiveOffer={handleSetActiveOffer}
                   />
                 </section>
                 <div className='cities__right-section'>

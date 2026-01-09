@@ -72,7 +72,6 @@ const renderCityCard = (props: {
   mark?: string;
   image: string;
   price: string;
-  rating: string;
   name: string;
   type: string;
   isBookmarked: boolean;
@@ -97,7 +96,6 @@ const renderCityCard = (props: {
           mark={props.mark}
           image={props.image}
           price={props.price}
-          rating={props.rating}
           name={props.name}
           type={props.type}
           isBookmarked={props.isBookmarked}
@@ -118,7 +116,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment in Paris',
       type: 'apartment',
       isBookmarked: false,
@@ -137,7 +134,6 @@ describe('CityCard component', () => {
       mark: 'Premium',
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -151,7 +147,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -165,7 +160,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -182,7 +176,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -199,7 +192,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -215,7 +207,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -233,10 +224,17 @@ describe('CityCard component', () => {
   });
 
   it('should dispatch changeFavoriteStatus when authorized user clicks bookmark', () => {
+    const mockUnwrap = vi.fn().mockResolvedValue({});
+    const mockAction = {
+      unwrap: mockUnwrap,
+    };
+    mockDispatch.mockReturnValue(
+      mockAction as unknown as ReturnType<typeof mockDispatch>
+    );
+
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -257,7 +255,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: true,
@@ -274,7 +271,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -293,29 +289,25 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
       offer: mockOffer,
     });
 
-    const imageLink = screen.getByRole('link', {
+    const links = screen.getAllByRole('link', {
       name: /view beautiful apartment/i,
     });
-    expect(imageLink).toHaveAttribute('href', '/offer/1');
-
-    const titleLink = screen.getByRole('link', {
-      name: /view beautiful apartment/i,
+    expect(links).toHaveLength(2);
+    links.forEach(link => {
+      expect(link).toHaveAttribute('href', '/offer/1');
     });
-    expect(titleLink).toHaveAttribute('href', '/offer/1');
   });
 
   it('should not have links when offer is not provided', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -329,7 +321,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -346,7 +337,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -361,11 +351,10 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
-      offer: mockOffer,
+      offer: { ...mockOffer, rating: 4.5 },
     });
 
     const ratingStars = document.querySelector(
@@ -373,6 +362,7 @@ describe('CityCard component', () => {
     );
     expect(ratingStars).toBeInTheDocument();
     const span = ratingStars?.querySelector('span');
-    expect(span).toHaveStyle({ width: '90%' });
+    // 4.5 rounds to 5, so 5 * 20 = 100%
+    expect(span).toHaveStyle({ width: '100%' });
   });
 });

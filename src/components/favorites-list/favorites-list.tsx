@@ -1,11 +1,24 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FavoritesCard from '../favorites-card/favorites-card';
+import { useAppDispatch } from '../../store';
+import { changeCity } from '../../store/action';
 
 interface FavoritesListProps {
   favorites: FavoriteOffer[];
 }
 
 const FavoritesList: FC<FavoritesListProps> = ({ favorites }) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleCityClick = useCallback(
+    (city: string) => {
+      dispatch(changeCity(city));
+      navigate('/');
+    },
+    [dispatch, navigate]
+  );
   const favoritesByCity = favorites.reduce(
     (acc, offer) => {
       if (!acc[offer.city]) {
@@ -23,9 +36,13 @@ const FavoritesList: FC<FavoritesListProps> = ({ favorites }) => {
         <li key={city} className='favorites__locations-items'>
           <div className='favorites__locations locations locations--current'>
             <div className='locations__item'>
-              <a className='locations__item-link' href='#'>
+              <button
+                className='locations__item-link'
+                type='button'
+                onClick={() => handleCityClick(city)}
+              >
                 <span>{city}</span>
-              </a>
+              </button>
             </div>
           </div>
           <div className='favorites__places'>

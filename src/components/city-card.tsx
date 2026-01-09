@@ -4,12 +4,12 @@ import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from '../store';
 import { selectAuthorizationStatus } from '../store/selectors';
 import { changeFavoriteStatus } from '../store/api-actions';
+import { getWidthByRatingPercent } from '../utils/formatters';
 
 interface CityCardProps {
   mark?: string;
   image: string;
   price: string;
-  rating: string;
   name: string;
   type: string;
   isBookmarked: boolean;
@@ -21,7 +21,6 @@ const CityCardComponent: FC<CityCardProps> = ({
   mark,
   image,
   price,
-  rating,
   name,
   type,
   isBookmarked,
@@ -39,6 +38,11 @@ const CityCardComponent: FC<CityCardProps> = ({
         'place-card__bookmark-button--active': isBookmarked,
       }),
     [isBookmarked]
+  );
+
+  const ratingWidth = useMemo(
+    () => getWidthByRatingPercent(offer?.rating ?? 0),
+    [offer]
   );
 
   // Мемоизируем обработчики событий
@@ -66,9 +70,14 @@ const CityCardComponent: FC<CityCardProps> = ({
 
       if (offer) {
         const newStatus = isBookmarked ? 0 : 1;
-        dispatch(
-          changeFavoriteStatus({ offerId: offer.id, status: newStatus })
-        );
+        dispatch(changeFavoriteStatus({ offerId: offer.id, status: newStatus }))
+          .unwrap()
+          .catch(() => {
+            // eslint-disable-next-line no-alert
+            alert(
+              'Failed to update favorite status. Please check your connection and try again.'
+            );
+          });
       }
     },
     [authorizationStatus, navigate, isBookmarked, dispatch, offer]
@@ -130,7 +139,7 @@ const CityCardComponent: FC<CityCardProps> = ({
         </div>
         <div className='place-card__rating rating'>
           <div className='place-card__stars rating__stars'>
-            <span style={{ width: `${rating}%` }}></span>
+            <span style={{ width: `${ratingWidth}%` }}></span>
             <span className='visually-hidden'>Rating</span>
           </div>
         </div>

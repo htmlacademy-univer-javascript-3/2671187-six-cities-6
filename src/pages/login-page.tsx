@@ -1,18 +1,12 @@
-import { FC, useState, FormEvent, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { FC, useState, FormEvent, useMemo } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { login } from '../store/api-actions';
 import { changeCity } from '../store/action';
 import { useAppDispatch, useAppSelector } from '../store';
 import { selectAuthorizationStatus } from '../store/selectors';
-
-const CITIES: City[] = [
-  'Paris',
-  'Cologne',
-  'Brussels',
-  'Amsterdam',
-  'Hamburg',
-  'Dusseldorf',
-];
+import { CITIES } from '../store/constants';
+import Header from '../components/header';
+import './login-page/login-page.css';
 
 const validatePassword = (password: string): boolean => {
   if (password.trim().length === 0) {
@@ -39,12 +33,6 @@ const LoginPage: FC = () => {
     () => CITIES[Math.floor(Math.random() * CITIES.length)],
     []
   );
-
-  useEffect(() => {
-    if (authorizationStatus === 'AUTH') {
-      navigate('/', { replace: true });
-    }
-  }, [authorizationStatus, navigate]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -107,37 +95,12 @@ const LoginPage: FC = () => {
   };
 
   if (authorizationStatus === 'AUTH') {
-    return null;
+    return <Navigate to='/' replace />;
   }
 
   return (
     <div className='page page--gray page--login'>
-      <header className='header'>
-        <div className='container'>
-          <div className='header__wrapper'>
-            <div className='header__left'>
-              <Link className='header__logo-link' to='/'>
-                <img
-                  className='header__logo'
-                  src='/img/logo.svg'
-                  alt='6 cities logo'
-                  width='81'
-                  height='41'
-                />
-              </Link>
-            </div>
-            <nav className='header__nav'>
-              <ul className='header__nav-list'>
-                <li className='header__nav-item'>
-                  <Link className='header__nav-link' to='/login'>
-                    <span className='header__login'>Sign in</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className='page__main page__main--login'>
         <div className='page__login-container container'>
@@ -170,17 +133,7 @@ const LoginPage: FC = () => {
                   disabled={isLoading}
                 />
               </div>
-              {error && (
-                <div
-                  style={{
-                    color: 'red',
-                    marginBottom: '10px',
-                    fontSize: '14px',
-                  }}
-                >
-                  {error}
-                </div>
-              )}
+              {error && <div className='login__error'>{error}</div>}
               <button
                 className='login__submit form__submit button'
                 type='submit'
@@ -192,16 +145,13 @@ const LoginPage: FC = () => {
           </section>
           <section className='locations locations--login locations--current'>
             <div className='locations__item'>
-              <a
+              <button
                 className='locations__item-link'
-                href='#'
-                onClick={e => {
-                  e.preventDefault();
-                  handleRandomCityClick();
-                }}
+                type='button'
+                onClick={handleRandomCityClick}
               >
                 <span>{randomCity}</span>
-              </a>
+              </button>
             </div>
           </section>
         </div>

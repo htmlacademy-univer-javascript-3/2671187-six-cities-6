@@ -162,6 +162,14 @@ describe('NearbyOfferCard component', () => {
   });
 
   it('should dispatch changeFavoriteStatus when authorized user clicks bookmark', () => {
+    const mockUnwrap = vi.fn().mockResolvedValue({});
+    const mockAction = {
+      unwrap: mockUnwrap,
+    };
+    mockDispatch.mockReturnValue(
+      mockAction as unknown as ReturnType<typeof mockDispatch>
+    );
+
     renderNearbyOfferCard(mockOffer, 'AUTH');
 
     const bookmarkButton = screen.getByRole('button', {
@@ -197,6 +205,7 @@ describe('NearbyOfferCard component', () => {
     );
     expect(ratingStars).toBeInTheDocument();
     const span = ratingStars?.querySelector('span');
-    expect(span).toHaveStyle({ width: '90%' }); // 4.5 * 20 = 90
+    // 4.5 rounds to 5, so 5 * 20 = 100%
+    expect(span).toHaveStyle({ width: '100%' });
   });
 });

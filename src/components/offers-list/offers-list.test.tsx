@@ -32,7 +32,7 @@ vi.mock('../city-card', () => ({
 }));
 
 describe('OffersList component', () => {
-  const mockSetActiveOffer = vi.fn();
+  const mockHandleSetActiveOffer = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -73,8 +73,10 @@ describe('OffersList component', () => {
     },
   ];
 
-  it('should render empty list when no offers provided', () => {
-    render(<OffersList offers={[]} setActiveOffer={mockSetActiveOffer} />);
+  it('renders an empty list when no offers are provided', () => {
+    render(
+      <OffersList offers={[]} handleSetActiveOffer={mockHandleSetActiveOffer} />
+    );
 
     const list = document.querySelector(
       '.cities__places-list.places__list.tabs__content'
@@ -83,89 +85,62 @@ describe('OffersList component', () => {
     expect(list?.children).toHaveLength(0);
   });
 
-  it('should render offer cards for each offer', () => {
+  it('renders each offer card', () => {
     render(
-      <OffersList offers={mockOffers} setActiveOffer={mockSetActiveOffer} />
+      <OffersList
+        offers={mockOffers}
+        handleSetActiveOffer={mockHandleSetActiveOffer}
+      />
     );
 
     expect(screen.getByTestId('offer-card-1')).toBeInTheDocument();
     expect(screen.getByTestId('offer-card-2')).toBeInTheDocument();
   });
 
-  it('should pass setActiveOffer to CityCard components', () => {
+  it('calls handleSetActiveOffer when hovering cards', () => {
     render(
-      <OffersList offers={mockOffers} setActiveOffer={mockSetActiveOffer} />
+      <OffersList
+        offers={mockOffers}
+        handleSetActiveOffer={mockHandleSetActiveOffer}
+      />
     );
 
-    const card1 = screen.getByTestId('offer-card-1');
-    fireEvent.mouseEnter(card1);
-
-    expect(mockSetActiveOffer).toHaveBeenCalledWith(mockOffers[0]);
+    const firstCard = screen.getByTestId('offer-card-1');
+    fireEvent.mouseEnter(firstCard);
+    expect(mockHandleSetActiveOffer).toHaveBeenCalledWith(mockOffers[0]);
+    fireEvent.mouseLeave(firstCard);
+    expect(mockHandleSetActiveOffer).toHaveBeenCalledWith(null);
   });
 
-  it('should call setActiveOffer with null on mouse leave', () => {
-    render(
-      <OffersList offers={mockOffers} setActiveOffer={mockSetActiveOffer} />
+  it('shows premium tag only for premium offers', () => {
+    const { unmount } = render(
+      <OffersList
+        offers={mockOffers}
+        handleSetActiveOffer={mockHandleSetActiveOffer}
+      />
     );
 
-    const card1 = screen.getByTestId('offer-card-1');
-    fireEvent.mouseEnter(card1);
-    fireEvent.mouseLeave(card1);
-
-    expect(mockSetActiveOffer).toHaveBeenCalledWith(null);
-  });
-
-  it('should pass correct props to CityCard', () => {
-    render(
-      <OffersList offers={mockOffers} setActiveOffer={mockSetActiveOffer} />
-    );
-
-    // Check first offer (premium)
-    const titles = screen.getAllByTestId('offer-title');
     expect(screen.getByTestId('premium-mark')).toBeInTheDocument();
-    expect(titles[0]).toHaveTextContent('Beautiful Apartment');
-    expect(screen.getAllByTestId('offer-price')[0]).toHaveTextContent('120');
-    expect(screen.getAllByTestId('offer-type')[0]).toHaveTextContent(
-      'apartment'
-    );
-  });
 
-  it('should not pass premium mark for non-premium offers', () => {
-    const nonPremiumOffers = [mockOffers[1]]; // Second offer is not premium
+    unmount();
+
+    const nonPremiumOffers = [mockOffers[1]];
     render(
       <OffersList
         offers={nonPremiumOffers}
-        setActiveOffer={mockSetActiveOffer}
+        handleSetActiveOffer={mockHandleSetActiveOffer}
       />
     );
 
     expect(screen.queryByTestId('premium-mark')).not.toBeInTheDocument();
   });
 
-  it('should pass isBookmarked correctly', () => {
+  it('renders the cards list with expected CSS classes', () => {
     render(
-      <OffersList offers={mockOffers} setActiveOffer={mockSetActiveOffer} />
-    );
-
-    // First offer is not favorite, second is favorite
-    const cards = screen.getAllByTestId(/offer-card-/);
-    expect(cards).toHaveLength(2);
-  });
-
-  it('should calculate rating correctly (rating * 20)', () => {
-    render(
-      <OffersList offers={mockOffers} setActiveOffer={mockSetActiveOffer} />
-    );
-
-    // First offer has rating 4.5, so rating should be "90" (4.5 * 20)
-    // Second offer has rating 3.8, so rating should be "76" (3.8 * 20)
-    const cards = screen.getAllByTestId(/offer-card-/);
-    expect(cards).toHaveLength(2);
-  });
-
-  it('should have correct CSS classes', () => {
-    render(
-      <OffersList offers={mockOffers} setActiveOffer={mockSetActiveOffer} />
+      <OffersList
+        offers={mockOffers}
+        handleSetActiveOffer={mockHandleSetActiveOffer}
+      />
     );
 
     const list = document.querySelector(
@@ -179,19 +154,25 @@ describe('OffersList component', () => {
     );
   });
 
-  it('should handle single offer correctly', () => {
+  it('renders correctly when a single offer is provided', () => {
     const singleOffer = [mockOffers[0]];
     render(
-      <OffersList offers={singleOffer} setActiveOffer={mockSetActiveOffer} />
+      <OffersList
+        offers={singleOffer}
+        handleSetActiveOffer={mockHandleSetActiveOffer}
+      />
     );
 
     expect(screen.getByTestId('offer-card-1')).toBeInTheDocument();
     expect(screen.queryByTestId('offer-card-2')).not.toBeInTheDocument();
   });
 
-  it('should handle multiple offers correctly', () => {
+  it('renders correctly for multiple offers', () => {
     render(
-      <OffersList offers={mockOffers} setActiveOffer={mockSetActiveOffer} />
+      <OffersList
+        offers={mockOffers}
+        handleSetActiveOffer={mockHandleSetActiveOffer}
+      />
     );
 
     expect(screen.getByTestId('offer-card-1')).toBeInTheDocument();

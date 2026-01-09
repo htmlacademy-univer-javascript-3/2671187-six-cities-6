@@ -14,6 +14,7 @@ interface OfferDetailsState {
   comments: Review[];
   isOfferLoading: boolean;
   isCommentSubmitting: boolean;
+  error: string | null;
 }
 
 const initialState: OfferDetailsState = {
@@ -22,6 +23,7 @@ const initialState: OfferDetailsState = {
   comments: [],
   isOfferLoading: false,
   isCommentSubmitting: false,
+  error: null,
 };
 
 const offerDetailsSlice = createSlice({
@@ -33,14 +35,17 @@ const offerDetailsSlice = createSlice({
       .addCase(fetchOfferDetails.pending, state => {
         state.isOfferLoading = true;
         state.currentOffer = null;
+        state.error = null;
       })
       .addCase(fetchOfferDetails.fulfilled, (state, action) => {
         state.isOfferLoading = false;
         state.currentOffer = action.payload;
+        state.error = null;
       })
-      .addCase(fetchOfferDetails.rejected, state => {
+      .addCase(fetchOfferDetails.rejected, (state, action) => {
         state.isOfferLoading = false;
         state.currentOffer = null;
+        state.error = action.error.message || 'Failed to load offer details';
       })
       .addCase(fetchNearbyOffers.fulfilled, (state, action) => {
         state.nearbyOffers = action.payload;
