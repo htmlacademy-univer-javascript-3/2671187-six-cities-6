@@ -90,6 +90,7 @@ describe('offerDetailsSlice reducer', () => {
     comments: [],
     isOfferLoading: false,
     isCommentSubmitting: false,
+    error: null,
   };
 
   it('should return the initial state', () => {
@@ -110,6 +111,7 @@ describe('offerDetailsSlice reducer', () => {
       const loadingState = {
         ...initialState,
         isOfferLoading: true,
+        error: null,
       };
 
       const action = fetchOfferDetails.fulfilled(
@@ -127,6 +129,7 @@ describe('offerDetailsSlice reducer', () => {
       const loadingState = {
         ...initialState,
         isOfferLoading: true,
+        error: null,
       };
 
       const action = fetchOfferDetails.rejected(
@@ -158,6 +161,7 @@ describe('offerDetailsSlice reducer', () => {
       const stateWithNearby = {
         ...initialState,
         nearbyOffers: mockNearbyOffers,
+        error: null,
       };
 
       const newNearbyOffers = [mockNearbyOffers[0]];
@@ -185,6 +189,7 @@ describe('offerDetailsSlice reducer', () => {
       const stateWithComments = {
         ...initialState,
         comments: mockComments,
+        error: null,
       };
 
       const action = fetchComments.rejected(
@@ -243,6 +248,7 @@ describe('offerDetailsSlice reducer', () => {
       const stateSubmitting = {
         ...initialState,
         isCommentSubmitting: true,
+        error: null,
       };
 
       const action = submitComment.rejected(
@@ -267,6 +273,7 @@ describe('offerDetailsSlice reducer', () => {
       const stateWithOffer = {
         ...initialState,
         currentOffer: mockOfferDetails,
+        error: null,
       };
 
       const updatedOffer: Offer = {
@@ -296,6 +303,7 @@ describe('offerDetailsSlice reducer', () => {
       const stateWithOffer = {
         ...initialState,
         currentOffer: mockOfferDetails,
+        error: null,
       };
 
       const differentOffer: Offer = {
@@ -329,6 +337,7 @@ describe('offerDetailsSlice reducer', () => {
       const stateWithNearby = {
         ...initialState,
         nearbyOffers: mockNearbyOffers,
+        error: null,
       };
 
       const updatedNearbyOffer: Offer = {
@@ -352,6 +361,7 @@ describe('offerDetailsSlice reducer', () => {
       const stateWithNearby = {
         ...initialState,
         nearbyOffers: mockNearbyOffers,
+        error: null,
       };
 
       const differentOffer: Offer = {
@@ -378,6 +388,7 @@ describe('offerDetailsSlice reducer', () => {
       const stateWithFavoriteOffer = {
         ...initialState,
         currentOffer: { ...mockOfferDetails, isFavorite: true },
+        error: null,
       };
 
       const action = logout();
@@ -393,6 +404,7 @@ describe('offerDetailsSlice reducer', () => {
           ...offer,
           isFavorite: true,
         })),
+        error: null,
       };
 
       const action = logout();

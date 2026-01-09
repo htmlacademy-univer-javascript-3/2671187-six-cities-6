@@ -72,7 +72,6 @@ const renderCityCard = (props: {
   mark?: string;
   image: string;
   price: string;
-  rating: string;
   name: string;
   type: string;
   isBookmarked: boolean;
@@ -97,7 +96,6 @@ const renderCityCard = (props: {
           mark={props.mark}
           image={props.image}
           price={props.price}
-          rating={props.rating}
           name={props.name}
           type={props.type}
           isBookmarked={props.isBookmarked}
@@ -118,7 +116,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment in Paris',
       type: 'apartment',
       isBookmarked: false,
@@ -137,7 +134,6 @@ describe('CityCard component', () => {
       mark: 'Premium',
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -151,7 +147,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -165,7 +160,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -182,7 +176,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -199,7 +192,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -215,7 +207,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -236,7 +227,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -257,7 +247,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: true,
@@ -274,7 +263,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -293,7 +281,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -315,7 +302,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -329,7 +315,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -346,7 +331,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
@@ -361,7 +345,6 @@ describe('CityCard component', () => {
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
-      rating: '90%',
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,

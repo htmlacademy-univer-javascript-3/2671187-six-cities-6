@@ -4,9 +4,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import ReviewForm from './review-form';
 import offerDetailsReducer from '../store/slices/offer-details-slice';
-import type { AppDispatch } from '../store';
 
-const mockDispatch = vi.fn<ReturnType<AppDispatch>, Parameters<AppDispatch>>();
+const mockDispatch = vi.fn();
 
 vi.mock('../store', async () => {
   const actual: typeof Object = await vi.importActual('../store');
@@ -39,7 +38,6 @@ const mockCurrentOffer: OfferDetails = {
     location: { latitude: 48.8566, longitude: 2.3522, zoom: 10 },
   },
   location: { latitude: 48.8566, longitude: 2.3522, zoom: 12 },
-  reviews: [],
 };
 
 const createTestStore = (
@@ -57,6 +55,7 @@ const createTestStore = (
         comments: [],
         isOfferLoading: false,
         isCommentSubmitting,
+        error: null,
       },
     },
   });
@@ -215,7 +214,7 @@ describe('ReviewForm component', () => {
     const mockAction = {
       unwrap: mockUnwrap,
     };
-    mockDispatch.mockReturnValue(mockAction);
+    mockDispatch.mockReturnValue(mockAction as any);
 
     renderReviewForm();
 
@@ -233,10 +232,10 @@ describe('ReviewForm component', () => {
     fireEvent.submit(form!);
 
     expect(mockDispatch).toHaveBeenCalled();
-    const dispatchedAction = mockDispatch.mock.calls[0]?.[0] as {
+    const dispatchedAction = (mockDispatch.mock.calls[0]?.[0] as {
       type: string;
-    };
-    expect(dispatchedAction?.type).toContain('submitComment');
+    }) || { type: '' };
+    expect(dispatchedAction.type).toContain('submitComment');
   });
 
   it('should not submit form when currentOffer is null', () => {
