@@ -215,7 +215,9 @@ describe('ReviewForm component', () => {
     const mockAction = {
       unwrap: mockUnwrap,
     };
-    mockDispatch.mockReturnValue(mockAction as any);
+    mockDispatch.mockReturnValue(
+      mockAction as unknown as ReturnType<typeof mockDispatch>
+    );
 
     renderReviewForm();
 
@@ -234,7 +236,7 @@ describe('ReviewForm component', () => {
 
     expect(mockDispatch).toHaveBeenCalled();
     // Verify that dispatch was called (the action could be a thunk or regular action)
-    const firstCall = mockDispatch.mock.calls[0];
+    const firstCall = mockDispatch.mock.calls[0] as unknown[];
     expect(firstCall).toBeDefined();
     expect(firstCall?.[0]).toBeDefined();
   });

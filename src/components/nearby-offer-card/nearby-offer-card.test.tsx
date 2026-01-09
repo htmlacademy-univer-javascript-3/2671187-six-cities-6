@@ -166,7 +166,9 @@ describe('NearbyOfferCard component', () => {
     const mockAction = {
       unwrap: mockUnwrap,
     };
-    mockDispatch.mockReturnValue(mockAction as any);
+    mockDispatch.mockReturnValue(
+      mockAction as unknown as ReturnType<typeof mockDispatch>
+    );
 
     renderNearbyOfferCard(mockOffer, 'AUTH');
 
