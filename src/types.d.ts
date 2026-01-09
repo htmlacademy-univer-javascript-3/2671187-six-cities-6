@@ -88,3 +88,13 @@ type AuthInfo = {
   name: string;
   token: string;
 };
+
+type CommentData = {
+  comment: string;
+  rating: number;
+};
+
+type ReviewFormData = {
+  rating: number;
+  review: string;
+};

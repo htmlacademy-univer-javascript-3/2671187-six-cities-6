@@ -3,6 +3,7 @@ import { AxiosInstance } from 'axios';
 import { setOffers } from './slices/offers-slice';
 import { setAuthStatus, setUser } from './slices/auth-slice';
 import { AppDispatch, RootState } from './index';
+import { LOCAL_STORAGE_TOKEN } from '../services/constants';
 
 export const fetchOffers = createAsyncThunk<
   Offer[],
@@ -47,16 +48,11 @@ export const login = createAsyncThunk<
   }
 >('user/login', async ({ email, password }, { dispatch, extra: api }) => {
   const { data } = await api.post<AuthInfo>('/login', { email, password });
-  localStorage.setItem('token', data.token);
+  localStorage.setItem(LOCAL_STORAGE_TOKEN, data.token);
   dispatch(setUser(data));
   dispatch(setAuthStatus('AUTH'));
   return data;
 });
-
-type CommentData = {
-  comment: string;
-  rating: number;
-};
 
 export const fetchOfferDetails = createAsyncThunk<
   OfferDetails,

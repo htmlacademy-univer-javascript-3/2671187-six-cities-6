@@ -1,17 +1,32 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import FavoritesList from '../components/favorites-list/favorites-list';
 import Header from '../components/header';
+import NetworkError from '../components/network-error';
 import { useAppSelector, useAppDispatch } from '../store';
 import { fetchFavorites } from '../store/api-actions';
-import { selectFavorites } from '../store/selectors';
+import {
+  selectFavorites,
+  selectFavoritesIsLoading,
+  selectFavoritesError,
+} from '../store/selectors';
 
 const FavoritesPage: FC = () => {
   const dispatch = useAppDispatch();
   const favorites = useAppSelector(selectFavorites);
+  const isLoading = useAppSelector(selectFavoritesIsLoading);
+  const error = useAppSelector(selectFavoritesError);
+
+  const handleRetryFavorites = useCallback(() => {
+    dispatch(fetchFavorites());
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchFavorites());
+    dispatch(fetchFavorites())
+      .unwrap()
+      .catch(() => {
+        // Ошибка уже в favoritesSlice
+      });
   }, [dispatch]);
 
   const hasFavorites = favorites.length > 0;
@@ -24,9 +39,22 @@ const FavoritesPage: FC = () => {
         <div className='page__favorites-container container'>
           <section className='favorites'>
             <h1 className='favorites__title'>Saved listing</h1>
-            {hasFavorites ? (
+            {isLoading && (
+              <div style={{ textAlign: 'center', padding: '50px' }}>
+                Loading your favorite offers...
+              </div>
+            )}
+            {!isLoading && error && (
+              <NetworkError
+                handleClick={handleRetryFavorites}
+                loadables='favorites'
+                error={error}
+              />
+            )}
+            {!isLoading && !error && hasFavorites && (
               <FavoritesList favorites={favorites} />
-            ) : (
+            )}
+            {!isLoading && !error && !hasFavorites && (
               <div style={{ textAlign: 'center', padding: '20px' }}>
                 <p>You have no favorite offers yet.</p>
                 <Link to='/'>Go back to main page</Link>

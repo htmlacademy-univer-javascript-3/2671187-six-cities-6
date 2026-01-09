@@ -1,44 +1,65 @@
-import { FC, useState } from 'react';
+import { FC, FormEvent, ChangeEvent, useState } from 'react';
+import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from '../store';
 import { submitComment } from '../store/api-actions';
+import {
+  selectCurrentOffer,
+  selectIsCommentSubmitting,
+} from '../store/selectors';
+import './review-form/review-form.css';
+
+const ratingLabelsMap: Record<number, string> = {
+  5: 'perfect',
+  4: 'good',
+  3: 'not bad',
+  2: 'badly',
+  1: 'terribly',
+};
+
+const getRatingTitle = (rating: number): string => ratingLabelsMap[rating] ?? '';
 
 const ReviewForm: FC = () => {
   const dispatch = useAppDispatch();
+  const currentOffer = useAppSelector(selectCurrentOffer);
+  const isCommentSubmitting = useAppSelector(selectIsCommentSubmitting);
 
-  const currentOffer = useAppSelector(state => state.offerDetails.currentOffer);
-  const isCommentSubmitting = useAppSelector(
-    state => state.offerDetails.isCommentSubmitting
-  );
-
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ReviewFormData>({
     rating: 0,
     review: '',
   });
+  const [hoveredRating, setHoveredRating] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   const handleRatingChange = (rating: number) => {
     setFormData(prev => ({
       ...prev,
       rating,
     }));
+    setError(null);
   };
 
-  const handleReviewChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
+  const handleReviewChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setFormData(prev => ({
       ...prev,
       review: event.target.value,
     }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!currentOffer) {
       return;
     }
 
-    void dispatch(
+    if (formData.review.length < 50 || formData.review.length > 300) {
+      setError('Review must be between 50 and 300 characters.');
+      return;
+    }
+
+    setError(null);
+
+    dispatch(
       submitComment({
         offerId: currentOffer.id,
         commentData: {
@@ -49,38 +70,24 @@ const ReviewForm: FC = () => {
     )
       .unwrap()
       .then(() => {
-        // Сброс формы после отправки
         setFormData({
           rating: 0,
           review: '',
         });
+        setHoveredRating(0);
       })
       .catch(() => {
-        // Обработка ошибки - можно добавить уведомление пользователю
+        setError('Something went wrong. Please try again later.');
       });
   };
 
-  const getRatingTitle = (rating: number): string => {
-    const ratingLabelsMap: { [key: string]: string } = {
-      5: 'perfect',
-      4: 'good',
-      3: 'not bad',
-      2: 'badly',
-      1: 'terribly',
-    };
-
-    return ratingLabelsMap[rating] || '';
-  };
-
-  const isFormValid = formData.rating > 0 && formData.review.length >= 50;
+  const isFormValid =
+    formData.rating > 0 &&
+    formData.review.length >= 50 &&
+    formData.review.length <= 300;
 
   return (
-    <form
-      className='reviews__form form'
-      action='#'
-      method='post'
-      onSubmit={handleSubmit}
-    >
+    <form className='reviews__form form' action='#' method='post' onSubmit={handleSubmit}>
       <label className='reviews__label form__label' htmlFor='review'>
         Your review
       </label>
@@ -95,11 +102,20 @@ const ReviewForm: FC = () => {
               type='radio'
               checked={formData.rating === rating}
               onChange={() => handleRatingChange(rating)}
+              disabled={isCommentSubmitting}
             />
             <label
               htmlFor={`${rating}-stars`}
-              className='reviews__rating-label form__rating-label'
+              className={classNames('reviews__rating-label form__rating-label', {
+                'form__rating-label--active':
+                  hoveredRating > 0
+                    ? rating <= hoveredRating
+                    : rating <= formData.rating,
+                'form__rating-label--reset': hoveredRating > 0,
+              })}
               title={getRatingTitle(rating)}
+              onMouseEnter={() => setHoveredRating(rating)}
+              onMouseLeave={() => setHoveredRating(0)}
             >
               <svg className='form__star-image' width='37' height='33'>
                 <use xlinkHref='#icon-star'></use>
@@ -115,6 +131,7 @@ const ReviewForm: FC = () => {
         placeholder='Tell how was your stay, what you like and what can be improved'
         value={formData.review}
         onChange={handleReviewChange}
+        disabled={isCommentSubmitting}
       />
       <div className='reviews__button-wrapper'>
         <p className='reviews__help'>
@@ -123,8 +140,14 @@ const ReviewForm: FC = () => {
           with at least <b className='reviews__text-amount'>50 characters</b>.
           {formData.review.length > 0 && (
             <span className='reviews__char-count'>
-              {' '}
-              ({formData.review.length}/50)
+              <span
+                className={classNames({
+                  'reviews__char-invalid': formData.review.length < 50,
+                })}
+              >
+                {formData.review.length}
+              </span>
+              /300
             </span>
           )}
         </p>
@@ -136,6 +159,7 @@ const ReviewForm: FC = () => {
           {isCommentSubmitting ? 'Submitting...' : 'Submit'}
         </button>
       </div>
+      {error && <div className='reviews__error'>{error}</div>}
     </form>
   );
 };

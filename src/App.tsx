@@ -6,6 +6,7 @@ import FavoritesPage from './pages/favorites-page';
 import OfferPage from './pages/offer-page';
 import NotFoundPage from './pages/not-found-page';
 import PrivateRoute from './components/private-route/private-route';
+import Spinner from './components/spinner/spinner';
 import { checkAuth, fetchFavorites } from './store/api-actions';
 import { useAppDispatch, useAppSelector } from './store';
 import { selectAuthorizationStatus } from './store/selectors';
@@ -25,6 +26,10 @@ const AppContent: FC = () => {
   }, [authorizationStatus, dispatch]);
 
   const isAuthorized = authorizationStatus === 'AUTH';
+
+  if (authorizationStatus === 'UNKNOWN') {
+    return <Spinner />;
+  }
 
   return (
     <BrowserRouter>

@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import { LOCAL_STORAGE_TOKEN } from './constants';
 
 const BASE_URL = 'https://14.design.htmlacademy.pro/six-cities';
 const TIMEOUT = 5000;
@@ -10,7 +11,7 @@ export const createAPI = (): AxiosInstance => {
   });
 
   api.interceptors.request.use(config => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
     if (token) {
       config.headers['X-Token'] = token;
     }
@@ -21,7 +22,7 @@ export const createAPI = (): AxiosInstance => {
     (response: AxiosResponse) => response,
     (error: AxiosError) => {
       if (error.response?.status === 401) {
-        localStorage.removeItem('token');
+        localStorage.removeItem(LOCAL_STORAGE_TOKEN);
       }
       return Promise.reject(error);
     }

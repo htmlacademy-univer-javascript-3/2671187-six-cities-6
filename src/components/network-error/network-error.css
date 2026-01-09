@@ -1,0 +1,30 @@
+.network-error {
+  text-align: center;
+  padding: 20px;
+}
+
+.network-error__message {
+  margin: 0 0 10px 0;
+  color: #666;
+}
+
+.network-error__button {
+  background-color: #4481c3;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.network-error__button:hover {
+  background-color: #3a6ba8;
+}
+
+.network-error__button:focus {
+  outline: 2px solid #4481c3;
+  outline-offset: 2px;
+}
+

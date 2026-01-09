@@ -1,12 +1,22 @@
-import { FC } from 'react';
-import { getWidthByRatingPercent } from '../../utils';
+import { FC, memo, useMemo } from 'react';
+import { getWidthByRatingPercent } from '../../utils/formatters';
 
 type ReviewProps = {
   review: Review;
 };
 
-export const Review: FC<ReviewProps> = ({ review }) => {
+export const Review: FC<ReviewProps> = memo(({ review }) => {
   const { user, rating, comment, date } = review;
+
+  // Мемоизируем форматирование даты
+  const formattedDate = useMemo(
+    () =>
+      new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+      }),
+    [date]
+  );
 
   return (
     <li className='reviews__item'>
@@ -33,12 +43,12 @@ export const Review: FC<ReviewProps> = ({ review }) => {
         </div>
         <p className='reviews__text'>{comment}</p>
         <time className='reviews__time' dateTime={date}>
-          {new Date(date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-          })}
+          {formattedDate}
         </time>
       </div>
     </li>
   );
-};
+});
+
+Review.displayName = 'Review';
+

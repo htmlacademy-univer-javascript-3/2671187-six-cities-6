@@ -1,9 +1,10 @@
-import { memo, useMemo, useCallback } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { selectAuthorizationStatus } from '../../store/selectors';
 import { changeFavoriteStatus } from '../../store/api-actions';
+import { getWidthByRatingPercent } from '../../utils/formatters';
 
 type NearbyOfferCardProps = {
   offer: Offer;
@@ -26,8 +27,7 @@ function NearbyOfferCardComponent({
     type,
   } = offer;
 
-  // Мемоизируем вычисления
-  const ratingPercent = useMemo(() => rating * 20, [rating]);
+  const ratingPercent = getWidthByRatingPercent(rating);
   const bookmarkButtonClassName = useMemo(
     () =>
       classNames('place-card__bookmark-button', 'button', {
@@ -47,7 +47,14 @@ function NearbyOfferCardComponent({
       }
 
       const newStatus = isBookmarked ? 0 : 1;
-      dispatch(changeFavoriteStatus({ offerId: offer.id, status: newStatus }));
+      dispatch(changeFavoriteStatus({ offerId: offer.id, status: newStatus }))
+        .unwrap()
+        .catch(() => {
+          // eslint-disable-next-line no-alert
+          alert(
+            'Failed to update favorite status. Please check your connection and try again.'
+          );
+        });
     },
     [authorizationStatus, navigate, isBookmarked, dispatch, offer.id]
   );

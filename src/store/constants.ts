@@ -1,3 +1,13 @@
+// ╨Ф╨╛╤Б╤В╤Г╨┐╨╜╤Л╨╡ ╨│╨╛╤А╨╛╨┤╨░ ╨┤╨╗╤П ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╤П
+export const CITIES: City[] = [
+  'Paris',
+  'Cologne',
+  'Brussels',
+  'Amsterdam',
+  'Hamburg',
+  'Dusseldorf',
+];
+
 // Error messages
 export const ERROR_MESSAGES = {
   FETCH_OFFERS_FAILED: 'Не удалось загрузить предложения',

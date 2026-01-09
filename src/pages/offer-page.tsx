@@ -1,5 +1,5 @@
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 import classNames from 'classnames';
 import { useAppSelector, useAppDispatch } from '../store';
 import ReviewsList from '../components/reviews-list';
@@ -7,19 +7,21 @@ import Map from '../components/map';
 import NearbyOffersList from '../components/nearby-offers-list';
 import Spinner from '../components/spinner';
 import Header from '../components/header';
+import NetworkError from '../components/network-error';
 import {
   fetchOfferDetails,
   fetchNearbyOffers,
   fetchComments,
   changeFavoriteStatus,
 } from '../store/api-actions';
-import { getWidthByRatingPercent } from '../utils';
+import { capitalizeFirst, getWidthByRatingPercent } from '../utils/formatters';
 import {
   selectCurrentOffer,
   selectNearbyOffers,
-  selectComments,
+  selectCommentsSortedLimited,
   selectIsOfferLoading,
   selectAuthorizationStatus,
+  selectOfferError,
 } from '../store/selectors';
 
 function OfferPage() {
@@ -30,24 +32,38 @@ function OfferPage() {
 
   const currentOffer = useAppSelector(selectCurrentOffer);
   const nearbyOffers = useAppSelector(selectNearbyOffers);
-  const comments = useAppSelector(selectComments);
+  const comments = useAppSelector(selectCommentsSortedLimited);
   const isOfferLoading = useAppSelector(selectIsOfferLoading);
+  const error = useAppSelector(selectOfferError);
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchOfferDetails(id));
+      dispatch(fetchOfferDetails(id))
+        .unwrap()
+        .catch(() => {
+          // Ошибка попадёт в offerDetailsSlice
+        });
       dispatch(fetchNearbyOffers(id));
       dispatch(fetchComments(id));
     }
   }, [dispatch, id]);
 
-  // Мемоизируем массив offers для Map
-  const mapOffers = useMemo(() => {
-    if (!currentOffer) {
-      return nearbyOffers;
+  const handleRetryOffer = useCallback(() => {
+    if (id) {
+      dispatch(fetchOfferDetails(id))
+        .unwrap()
+        .catch(() => {
+          // При повторной попытке оставим ошибку в состоянии
+        });
     }
-    // Конвертируем OfferDetails в Offer для карты
-    const offerForMap: Offer = {
+  }, [dispatch, id]);
+
+  const mappedCurrentOffer = useMemo(() => {
+    if (!currentOffer) {
+      return null;
+    }
+
+    return {
       id: currentOffer.id,
       title: currentOffer.title,
       type: currentOffer.type,
@@ -59,12 +75,18 @@ function OfferPage() {
       city: currentOffer.city,
       location: currentOffer.location,
       reviews: comments,
-    };
-    return [...nearbyOffers, offerForMap];
-  }, [nearbyOffers, currentOffer, comments]);
+    } as Offer;
+  }, [currentOffer, comments]);
 
-  // Спиннер
-  if (isOfferLoading || !currentOffer) {
+  const mapOffers = useMemo(() => {
+    if (!mappedCurrentOffer) {
+      return nearbyOffers;
+    }
+
+    return [...nearbyOffers, mappedCurrentOffer];
+  }, [nearbyOffers, mappedCurrentOffer]);
+
+  if (isOfferLoading && !error) {
     return (
       <div className='page'>
         <Header />
@@ -77,9 +99,79 @@ function OfferPage() {
     );
   }
 
-  // Если загрузка завершена и предложения нет (404)
+  if (error) {
+    return (
+      <div className='page'>
+        <Header />
+        <main className='page__main page__main--offer'>
+          <NetworkError
+            handleClick={handleRetryOffer}
+            loadables='offer details'
+            error={error}
+          />
+        </main>
+      </div>
+    );
+  }
+
   if (!isOfferLoading && !currentOffer && id) {
-    return <Navigate to='/404' replace />;
+    return (
+      <div className='page'>
+        <Header />
+        <main className='page__main page__main--offer'>
+          <div
+            style={{ textAlign: 'center', padding: '50px', color: '#ff6b6b' }}
+          >
+            <h2>Offer Not Found</h2>
+            <p>The offer you are looking for does not exist.</p>
+            <button
+              onClick={() => navigate('/')}
+              style={{
+                marginTop: '20px',
+                padding: '10px 20px',
+                backgroundColor: '#4481c3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+              }}
+            >
+              Go to Main Page
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (!currentOffer) {
+    return (
+      <div className='page'>
+        <Header />
+        <main className='page__main page__main--offer'>
+          <div
+            style={{ textAlign: 'center', padding: '50px', color: '#ff6b6b' }}
+          >
+            <h2>Offer Not Available</h2>
+            <p>This offer is currently unavailable.</p>
+            <button
+              onClick={() => navigate('/')}
+              style={{
+                marginTop: '20px',
+                padding: '10px 20px',
+                backgroundColor: '#4481c3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+              }}
+            >
+              Go to Main Page
+            </button>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   const offer = currentOffer;
@@ -92,7 +184,14 @@ function OfferPage() {
 
     if (offer) {
       const newStatus = offer.isFavorite ? 0 : 1;
-      dispatch(changeFavoriteStatus({ offerId: offer.id, status: newStatus }));
+      dispatch(changeFavoriteStatus({ offerId: offer.id, status: newStatus }))
+        .unwrap()
+        .catch(() => {
+          // eslint-disable-next-line no-alert
+          alert(
+            'Failed to update favorite status. Please check your connection and try again.'
+          );
+        });
     }
   };
 
@@ -156,7 +255,7 @@ function OfferPage() {
               </div>
               <ul className='offer__features'>
                 <li className='offer__feature offer__feature--entire'>
-                  {offer.type}
+                  {capitalizeFirst(offer.type)}
                 </li>
                 <li className='offer__feature offer__feature--bedrooms'>
                   {offer.bedrooms} Bedroom{offer.bedrooms !== 1 ? 's' : ''}
@@ -209,13 +308,13 @@ function OfferPage() {
               <ReviewsList reviews={comments} />
             </div>
           </div>
-          <section className='offer__map map'>
-            <Map
-              offers={mapOffers}
-              activeOffer={mapOffers.find(o => o.id === offer.id) || null}
-              center={[offer.location.latitude, offer.location.longitude]}
-            />
-          </section>
+            <section className='offer__map map'>
+              <Map
+                offers={mapOffers}
+                activeOffer={mappedCurrentOffer}
+                center={[offer.location.latitude, offer.location.longitude]}
+              />
+            </section>
         </section>
         <div className='container'>
           <section className='near-places places'>

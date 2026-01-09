@@ -3,15 +3,15 @@ import CityCard from '../city-card';
 
 type Props = {
   offers: Offer[];
-  setActiveOffer: (offer: Offer | null) => void;
+  handleSetActiveOffer: (offer: Offer | null) => void;
 };
 
-const OffersList: FC<Props> = ({ offers, setActiveOffer }) => {
+const OffersList: FC<Props> = ({ offers, handleSetActiveOffer }) => {
   const handleCardHover = useCallback(
     (offer: Offer | null) => {
-      setActiveOffer(offer);
+      handleSetActiveOffer(offer);
     },
-    [setActiveOffer]
+    [handleSetActiveOffer]
   );
 
   return (
@@ -22,7 +22,6 @@ const OffersList: FC<Props> = ({ offers, setActiveOffer }) => {
           mark={offer.isPremium ? 'Premium' : undefined}
           image={offer.previewImage || ''}
           price={offer.price.toString()}
-          rating={(offer.rating * 20).toString()}
           name={offer.title}
           type={offer.type || ''}
           isBookmarked={offer.isFavorite}

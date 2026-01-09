@@ -1,0 +1,14 @@
+.form__rating-label--reset .form__star-image {
+  fill: #c7c7c7 !important;
+}
+.form__rating-label--active .form__star-image {
+  fill: #ff9000 !important;
+}
+.reviews__char-invalid {
+  color: red;
+}
+.reviews__error {
+  font-size: 12px;
+  color: red;
+}
+
