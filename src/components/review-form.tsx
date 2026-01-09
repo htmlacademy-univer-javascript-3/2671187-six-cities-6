@@ -109,6 +109,7 @@ const ReviewForm: FC = () => {
               checked={formData.rating === rating}
               onChange={() => handleRatingChange(rating)}
               disabled={isCommentSubmitting}
+              aria-label={`${rating}-stars`}
             />
             <label
               htmlFor={`${rating}-stars`}
@@ -123,6 +124,7 @@ const ReviewForm: FC = () => {
                 }
               )}
               title={getRatingTitle(rating)}
+              aria-label={getRatingTitle(rating)}
               onMouseEnter={() => setHoveredRating(rating)}
               onMouseLeave={() => setHoveredRating(0)}
             >

@@ -113,7 +113,7 @@ describe('OffersList component', () => {
   });
 
   it('shows premium tag only for premium offers', () => {
-    render(
+    const { unmount } = render(
       <OffersList
         offers={mockOffers}
         handleSetActiveOffer={mockHandleSetActiveOffer}
@@ -121,6 +121,8 @@ describe('OffersList component', () => {
     );
 
     expect(screen.getByTestId('premium-mark')).toBeInTheDocument();
+
+    unmount();
 
     const nonPremiumOffers = [mockOffers[1]];
     render(

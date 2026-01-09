@@ -224,6 +224,12 @@ describe('CityCard component', () => {
   });
 
   it('should dispatch changeFavoriteStatus when authorized user clicks bookmark', () => {
+    const mockUnwrap = vi.fn().mockResolvedValue({});
+    const mockAction = {
+      unwrap: mockUnwrap,
+    };
+    mockDispatch.mockReturnValue(mockAction as any);
+
     renderCityCard({
       image: 'apartment.jpg',
       price: '120',
@@ -287,15 +293,13 @@ describe('CityCard component', () => {
       offer: mockOffer,
     });
 
-    const imageLink = screen.getByRole('link', {
+    const links = screen.getAllByRole('link', {
       name: /view beautiful apartment/i,
     });
-    expect(imageLink).toHaveAttribute('href', '/offer/1');
-
-    const titleLink = screen.getByRole('link', {
-      name: /view beautiful apartment/i,
+    expect(links).toHaveLength(2);
+    links.forEach(link => {
+      expect(link).toHaveAttribute('href', '/offer/1');
     });
-    expect(titleLink).toHaveAttribute('href', '/offer/1');
   });
 
   it('should not have links when offer is not provided', () => {
@@ -348,7 +352,7 @@ describe('CityCard component', () => {
       name: 'Beautiful Apartment',
       type: 'apartment',
       isBookmarked: false,
-      offer: mockOffer,
+      offer: { ...mockOffer, rating: 4.5 },
     });
 
     const ratingStars = document.querySelector(
@@ -356,6 +360,7 @@ describe('CityCard component', () => {
     );
     expect(ratingStars).toBeInTheDocument();
     const span = ratingStars?.querySelector('span');
-    expect(span).toHaveStyle({ width: '90%' });
+    // 4.5 rounds to 5, so 5 * 20 = 100%
+    expect(span).toHaveStyle({ width: '100%' });
   });
 });
