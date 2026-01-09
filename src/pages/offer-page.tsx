@@ -46,8 +46,22 @@ function OfferPage() {
     if (!currentOffer) {
       return nearbyOffers;
     }
-    return [...nearbyOffers, currentOffer];
-  }, [nearbyOffers, currentOffer]);
+    // Конвертируем OfferDetails в Offer для карты
+    const offerForMap: Offer = {
+      id: currentOffer.id,
+      title: currentOffer.title,
+      type: currentOffer.type,
+      price: currentOffer.price,
+      previewImage: currentOffer.images[0] || '',
+      rating: currentOffer.rating,
+      isPremium: currentOffer.isPremium,
+      isFavorite: currentOffer.isFavorite,
+      city: currentOffer.city,
+      location: currentOffer.location,
+      reviews: comments,
+    };
+    return [...nearbyOffers, offerForMap];
+  }, [nearbyOffers, currentOffer, comments]);
 
   // Спиннер
   if (isOfferLoading || !currentOffer) {
@@ -198,7 +212,7 @@ function OfferPage() {
           <section className='offer__map map'>
             <Map
               offers={mapOffers}
-              activeOffer={offer}
+              activeOffer={mapOffers.find(o => o.id === offer.id) || null}
               center={[offer.location.latitude, offer.location.longitude]}
             />
           </section>

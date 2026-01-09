@@ -143,7 +143,7 @@ describe('favoritesSlice reducer', () => {
       };
 
       const action = fetchFavorites.rejected(
-        { message: undefined } as Error,
+        { message: undefined } as unknown as Error,
         'requestId',
         undefined
       );
@@ -267,7 +267,7 @@ describe('favoritesSlice reducer', () => {
 
     it('should handle rejected with default error message', () => {
       const action = changeFavoriteStatus.rejected(
-        { message: undefined } as Error,
+        { message: undefined } as unknown as Error,
         'requestId',
         {
           offerId: '1',

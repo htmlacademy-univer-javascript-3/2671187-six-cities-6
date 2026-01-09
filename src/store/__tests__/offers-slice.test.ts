@@ -196,7 +196,7 @@ describe('offersSlice reducer', () => {
       };
 
       const action = fetchOffers.rejected(
-        { message: undefined } as Error,
+        { message: undefined } as unknown as Error,
         'requestId',
         undefined
       );
