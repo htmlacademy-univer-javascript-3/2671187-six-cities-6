@@ -5,7 +5,7 @@ import LoginPage from './pages/login-page';
 import FavoritesPage from './pages/favorites-page';
 import OfferPage from './pages/offer-page';
 import NotFoundPage from './pages/not-found-page';
-import PrivateRoute from './components/private-route';
+import PrivateRoute from './components/private-route/private-route';
 import { checkAuth, fetchFavorites } from './store/api-actions';
 import { useAppDispatch, useAppSelector } from './store';
 import { selectAuthorizationStatus } from './store/selectors';

@@ -1,15 +1,14 @@
 import { FC, memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../store';
-import { changeFavoriteStatus } from '../store/api-actions';
+import { useAppDispatch } from '../../store';
+import { changeFavoriteStatus } from '../../store/api-actions';
 
 interface FavoritesCardProps {
   offer: FavoriteOffer;
 }
 
 const FavoritesCardComponent: FC<FavoritesCardProps> = ({ offer }) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   const handleRemoveFromFavorites = useCallback(() => {
     void dispatch(changeFavoriteStatus({ offerId: offer.id, status: 0 }));
