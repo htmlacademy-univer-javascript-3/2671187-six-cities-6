@@ -5,7 +5,7 @@ import { setAuthStatus, setUser } from './slices/auth-slice';
 import { AppDispatch, RootState } from './index';
 
 export const fetchOffers = createAsyncThunk<
-  void,
+  Offer[],
   undefined,
   {
     dispatch: AppDispatch;
@@ -16,6 +16,7 @@ export const fetchOffers = createAsyncThunk<
   const { data } = await api.get<Offer[]>('/offers');
 
   dispatch(setOffers(data));
+  return data;
 });
 
 export const checkAuth = createAsyncThunk<
@@ -108,3 +109,32 @@ export const submitComment = createAsyncThunk<
   const { data } = await api.post<Review>(`/comments/${offerId}`, commentData);
   return data;
 });
+
+export const fetchFavorites = createAsyncThunk<
+  Offer[],
+  undefined,
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+    extra: AxiosInstance;
+  }
+>('favorites/fetchFavorites', async (_arg, { extra: api }) => {
+  const { data } = await api.get<Offer[]>('/favorite');
+  return data;
+});
+
+export const changeFavoriteStatus = createAsyncThunk<
+  Offer,
+  { offerId: string | number; status: 0 | 1 },
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+    extra: AxiosInstance;
+  }
+>(
+  'favorites/changeFavoriteStatus',
+  async ({ offerId, status }, { extra: api }) => {
+    const { data } = await api.post<Offer>(`/favorite/${offerId}/${status}`);
+    return data;
+  }
+);

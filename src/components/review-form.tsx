@@ -5,10 +5,10 @@ import { submitComment } from '../store/api-actions';
 const ReviewForm: FC = () => {
   const dispatch = useAppDispatch();
 
-  const { currentOffer, isCommentSubmitting } = useAppSelector(state => ({
-    currentOffer: state.currentOffer,
-    isCommentSubmitting: state.isCommentSubmitting,
-  }));
+  const currentOffer = useAppSelector(state => state.offerDetails.currentOffer);
+  const isCommentSubmitting = useAppSelector(
+    state => state.offerDetails.isCommentSubmitting
+  );
 
   const [formData, setFormData] = useState({
     rating: 0,
@@ -38,7 +38,7 @@ const ReviewForm: FC = () => {
       return;
     }
 
-    dispatch(
+    void dispatch(
       submitComment({
         offerId: currentOffer.id,
         commentData: {

@@ -1,9 +1,9 @@
 import { FC, useState, FormEvent, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../store/api-actions';
 import { changeCity } from '../store/action';
-import type { AppDispatch, RootState } from '../store';
+import { useAppDispatch, useAppSelector } from '../store';
+import { selectAuthorizationStatus } from '../store/selectors';
 
 const CITIES: City[] = [
   'Paris',
@@ -24,11 +24,9 @@ const validatePassword = (password: string): boolean => {
 };
 
 const LoginPage: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const authorizationStatus = useSelector(
-    (state: RootState) => state.authorizationStatus
-  );
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   const [formData, setFormData] = useState({
     email: '',

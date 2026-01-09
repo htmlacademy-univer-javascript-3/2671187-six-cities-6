@@ -8,7 +8,7 @@ type ReviewsListProps = {
   reviews: Review[];
 };
 
-function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
+function ReviewsListComponent({ reviews }: ReviewsListProps): JSX.Element {
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   return (
@@ -27,4 +27,7 @@ function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
   );
 }
 
-export default memo(ReviewsList);
+const ReviewsList = memo(ReviewsListComponent);
+ReviewsList.displayName = 'ReviewsList';
+
+export default ReviewsList;

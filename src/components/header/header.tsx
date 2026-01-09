@@ -2,12 +2,17 @@ import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { logout } from '../../store/action';
-import { selectAuthorizationStatus, selectUser } from '../../store/selectors';
+import {
+  selectAuthorizationStatus,
+  selectUser,
+  selectFavoritesCount,
+} from '../../store/selectors';
 
-function Header(): JSX.Element {
+function HeaderComponent(): JSX.Element {
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const user = useAppSelector(selectUser);
+  const favoritesCount = useAppSelector(selectFavoritesCount);
 
   const isAuthorized = authorizationStatus === 'AUTH';
   const userEmail = user?.email || '';
@@ -51,6 +56,9 @@ function Header(): JSX.Element {
                     <span className='header__user-name user__name'>
                       {userEmail}
                     </span>
+                    <span className='header__favorite-count'>
+                      {favoritesCount}
+                    </span>
                   </Link>
                 </li>
                 <li className='header__nav-item'>
@@ -81,5 +89,7 @@ function Header(): JSX.Element {
   );
 }
 
-export default memo(Header);
+const Header = memo(HeaderComponent);
+Header.displayName = 'Header';
 
+export default Header;

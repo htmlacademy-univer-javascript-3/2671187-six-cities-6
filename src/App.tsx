@@ -1,24 +1,28 @@
 import { FC, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import MainPage from './pages/main-page';
 import LoginPage from './pages/login-page';
 import FavoritesPage from './pages/favorites-page';
 import OfferPage from './pages/offer-page';
 import NotFoundPage from './pages/not-found-page';
 import PrivateRoute from './components/private-route';
-import { checkAuth } from './store/api-actions';
-import type { AppDispatch, RootState } from './store';
+import { checkAuth, fetchFavorites } from './store/api-actions';
+import { useAppDispatch, useAppSelector } from './store';
+import { selectAuthorizationStatus } from './store/selectors';
 
 const AppContent: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const authorizationStatus = useSelector(
-    (state: RootState) => state.authorizationStatus
-  );
+  const dispatch = useAppDispatch();
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   useEffect(() => {
     dispatch(checkAuth());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (authorizationStatus === 'AUTH') {
+      dispatch(fetchFavorites());
+    }
+  }, [authorizationStatus, dispatch]);
 
   const isAuthorized = authorizationStatus === 'AUTH';
 
@@ -34,7 +38,7 @@ const AppContent: FC = () => {
           path='/favorites'
           element={
             <PrivateRoute>
-              <FavoritesPage favorites={[]} />
+              <FavoritesPage />
             </PrivateRoute>
           }
         />

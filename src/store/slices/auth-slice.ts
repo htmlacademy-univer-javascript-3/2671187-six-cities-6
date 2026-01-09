@@ -21,17 +21,17 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<AuthInfo | null>) => {
       state.user = action.payload;
     },
-    logout: (state) => {
+    logout: state => {
       state.authorizationStatus = 'NO_AUTH';
       state.user = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(checkAuth.fulfilled, (state) => {
+      .addCase(checkAuth.fulfilled, state => {
         state.authorizationStatus = 'AUTH';
       })
-      .addCase(checkAuth.rejected, (state) => {
+      .addCase(checkAuth.rejected, state => {
         state.authorizationStatus = 'NO_AUTH';
       })
       .addCase(login.fulfilled, (state, action) => {
@@ -43,4 +43,3 @@ const authSlice = createSlice({
 
 export const { setAuthStatus, setUser, logout } = authSlice.actions;
 export default authSlice.reducer;
-

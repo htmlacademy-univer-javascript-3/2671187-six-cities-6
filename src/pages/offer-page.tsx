@@ -1,5 +1,6 @@
-import { Link, useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
+import classNames from 'classnames';
 import { useAppSelector, useAppDispatch } from '../store';
 import ReviewsList from '../components/reviews-list';
 import Map from '../components/map';
@@ -10,6 +11,7 @@ import {
   fetchOfferDetails,
   fetchNearbyOffers,
   fetchComments,
+  changeFavoriteStatus,
 } from '../store/api-actions';
 import { getWidthByRatingPercent } from '../utils';
 import {
@@ -18,12 +20,13 @@ import {
   selectComments,
   selectIsOfferLoading,
   selectAuthorizationStatus,
-  selectUser,
 } from '../store/selectors';
 
 function OfferPage() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   const currentOffer = useAppSelector(selectCurrentOffer);
   const nearbyOffers = useAppSelector(selectNearbyOffers);
@@ -67,6 +70,18 @@ function OfferPage() {
 
   const offer = currentOffer;
 
+  const handleBookmarkClick = () => {
+    if (authorizationStatus !== 'AUTH') {
+      navigate('/login');
+      return;
+    }
+
+    if (offer) {
+      const newStatus = offer.isFavorite ? 0 : 1;
+      dispatch(changeFavoriteStatus({ offerId: offer.id, status: newStatus }));
+    }
+  };
+
   return (
     <div className='page'>
       <Header />
@@ -95,11 +110,21 @@ function OfferPage() {
               )}
               <div className='offer__name-wrapper'>
                 <h1 className='offer__name'>{offer.title}</h1>
-                <button className='offer__bookmark-button button' type='button'>
+                <button
+                  className={classNames(
+                    'offer__bookmark-button',
+                    'button',
+                    offer.isFavorite && 'offer__bookmark-button--active'
+                  )}
+                  type='button'
+                  onClick={handleBookmarkClick}
+                >
                   <svg className='offer__bookmark-icon' width='31' height='33'>
                     <use xlinkHref='#icon-bookmark'></use>
                   </svg>
-                  <span className='visually-hidden'>To bookmarks</span>
+                  <span className='visually-hidden'>
+                    {offer.isFavorite ? 'In bookmarks' : 'To bookmarks'}
+                  </span>
                 </button>
               </div>
               <div className='offer__rating rating'>

@@ -19,13 +19,17 @@ export const selectIsOfferLoading = (state: RootState) =>
   state.offerDetails.isOfferLoading;
 export const selectIsCommentSubmitting = (state: RootState) =>
   state.offerDetails.isCommentSubmitting;
+export const selectFavorites = (state: RootState) => state.favorites.favorites;
+export const selectFavoritesIsLoading = (state: RootState) =>
+  state.favorites.isLoading;
+export const selectFavoritesError = (state: RootState) => state.favorites.error;
 
 // Мемоизированные селекторы для производных данных
 
 // Фильтрация предложений по выбранному городу
 export const selectCityOffers = createSelector(
   [selectAllOffers, selectCityTab],
-  (offers, cityTab) => offers.filter((offer) => offer.city.name === cityTab)
+  (offers, cityTab) => offers.filter(offer => offer.city.name === cityTab)
 );
 
 // Применение сортировки к отфильтрованным предложениям
@@ -49,21 +53,18 @@ export const selectSortedOffers = createSelector(
 );
 
 // Расчет центра карты на основе отсортированных предложений
-export const selectMapCenter = createSelector(
-  [selectSortedOffers],
-  (offers) => {
-    const DEFAULT_MAP_CENTER: [number, number] = [
-      52.3909553943508, 4.85309666406198,
-    ];
+export const selectMapCenter = createSelector([selectSortedOffers], offers => {
+  const DEFAULT_MAP_CENTER: [number, number] = [
+    52.3909553943508, 4.85309666406198,
+  ];
 
-    return offers.length > 0
-      ? ([offers[0].location.latitude, offers[0].location.longitude] as [
-          number,
-          number
-        ])
-      : DEFAULT_MAP_CENTER;
-  }
-);
+  return offers.length > 0
+    ? ([offers[0].location.latitude, offers[0].location.longitude] as [
+        number,
+        number,
+      ])
+    : DEFAULT_MAP_CENTER;
+});
 
 // Комплексный селектор для главной страницы
 export const selectMainPageData = createSelector(
@@ -85,3 +86,8 @@ export const selectMainPageData = createSelector(
   })
 );
 
+// Favorites selectors
+export const selectFavoritesCount = createSelector(
+  [selectFavorites],
+  favorites => favorites.length
+);
